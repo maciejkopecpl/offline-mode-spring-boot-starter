@@ -1,0 +1,28 @@
+plugins {
+	id "io.freefair.lombok" version "6.2.0"
+	id 'org.springframework.boot' version '2.6.2'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'pl.maciejkopec'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	implementation 'org.springframework.boot:spring-boot-starter-json'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+}
+
+test {
+	useJUnitPlatform()
+}
