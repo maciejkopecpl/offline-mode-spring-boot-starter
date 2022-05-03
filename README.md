@@ -2,8 +2,7 @@
 Offline Mode for Spring Boot 
 </h1>
 <p align="center">
-Spring Boot Starter providing an Offline Mode for Spring Boot application.
-</p>
+Spring Boot Starter provides an Offline Mode for Spring Boot application.</p>
 
 ## 🚀 Quick start
 
@@ -50,7 +49,7 @@ class DemoService {
 }
 ```
 
-4. Run your application. This library will capture the returned data and stored serialized data in `offline` folder.
+4. Run your application. This library will capture the returned data and store serialized data in `offline` folder.
 5. Turn Offline Mode in `SERVING` mode
 
 application.yaml
@@ -62,17 +61,17 @@ offline-mode:
 ```
 
 The execution of `demo()` method won't happen now. Instead, the return data will be served from serialized file captured
-in previous step.
+in the previous step.
 
 ## 🧐 What's the purpose?
 
-This starter is useful when you want to avoid calling external services, databases etc. There are few possible use
-cases, e.g.
+This starter is useful when you want to avoid calling external services, databases etc. There are a few possible
+use-cases, e.g.
 
-* when you cannot run all services your application depends on in local environment, and you want to run your
+* when you cannot run all services your application depends on in the local environment, and you want to run your
   application without calling these services,
-* when you want to avoid calling services that are billed per-call,
-* when your development environment is not stable, and impacts development of service that you own,
+* when you want to avoid calling services that are billed per call,
+* when your development environment is not stable and impacts the development of the service that you own,
 * when data quality is poor or hard to replicate,
 * when you are performing PoC,
 * when the service you want to use is not ready yet, it is easy to mock the response of such service,
@@ -80,17 +79,18 @@ cases, e.g.
 
 ### 💡Why not just use cache?
 
-For cache to work you first need to make a call. If the returned data depends on the input parameters, that becomes a
-problem. Also, cache main purpose is to avoid expensive calls, once data is cached it doesn't change.
+For the cache to work you first need to make a call. If the returned data depends on the input parameters, that becomes
+a problem, because you need to make many calls to capture data. Also, the cache's main purpose is to avoid expensive
+calls, once data is cached it doesn't change.
 
-With this starter, you can prepare data by your own. You can run your application in `LEARNING` mode to speed this
+With this starter, you can prepare data on your own. You can run your application in `LEARNING` mode to speed this
 process up, but nothing stops you from creating the response file from scratch. It is very easy to provide many
 responses based on the input parameters, which makes this tool great for testing and development!
 
 ### ⛔ Production use
 
-This is not meant for production! The problems this starter helps to solve are mainly related with lower environments or
-PoC type projects. If you cannot depend on some service in production then you should look for different solution.
+This is not meant for production! The problems this starter helps to solve are mainly related to lower environments or
+PoC-type projects. If you cannot depend on some service in production then you should look for a different solution.
 
 It should not be a replacement for caching solution.
 
