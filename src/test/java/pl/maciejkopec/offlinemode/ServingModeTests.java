@@ -1,7 +1,5 @@
 package pl.maciejkopec.offlinemode;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,19 +10,19 @@ import pl.maciejkopec.offlinemode.test.TestFullDto;
 import pl.maciejkopec.offlinemode.test.TestFullDtoWithoutEquals;
 import pl.maciejkopec.offlinemode.test.TestService;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
 @ContextConfiguration(classes = TestApplication.class)
 @TestPropertySource(
     value = "classpath:application.yaml",
-    properties = {
-      "offline-mode.mode=serving",
-      "offline-mode.path=src/test/resources/data/serving"
-    })
+    properties = {"offline-mode.mode=serving", "offline-mode.path=src/test/resources/data/serving"})
 class ServingModeTests {
 
   @Autowired private TestService testService;
 
   private static final String EXPECTED_STATIC_VALUE = "static_value";
+  private static final String EXPECTED_DYNAMIC_VALUE = "dynamic_data";
 
   @Test
   void smokeTest() {
@@ -84,5 +82,22 @@ class ServingModeTests {
     final TestFullDto result = testService.dtoCallWithCustomComplexKey(complexObject);
 
     assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
+  }
+
+  @Test
+  void shouldReuseCachedExpression() {
+    final TestFullDtoWithoutEquals complexObject = new TestFullDtoWithoutEquals("test_parameter");
+    testService.dtoCallWithCustomComplexKey(complexObject);
+    final TestFullDto result = testService.dtoCallWithCustomComplexKey(complexObject);
+
+    assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
+  }
+
+  @Test
+  void shouldNotFailIfDataFileIsMissing() {
+    final TestFullDtoWithoutEquals complexObject = new TestFullDtoWithoutEquals("test_parameter");
+    final TestFullDto result = testService.missConfigured(complexObject);
+
+    assertThat(result.getValue()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
   }
 }

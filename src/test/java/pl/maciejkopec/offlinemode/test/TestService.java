@@ -48,4 +48,11 @@ public class TestService {
     testFullDto.setValue(DYNAMIC_DATA);
     return testFullDto;
   }
+
+  @OfflineMode(key = "'missConfigured'")
+  public TestFullDto missConfigured(final TestFullDtoWithoutEquals complexObject) {
+    final TestFullDto testFullDto = new TestFullDto();
+    testFullDto.setValue(DYNAMIC_DATA);
+    return testFullDto;
+  }
 }
