@@ -55,7 +55,7 @@ sonarqube {
 
 jar {
     into("META-INF/maven/${project.group}/${project.name}") {
-        from { generatePomFileForMavenJavaPublication }
+        from { generatePomFileForOfflineModeAppPublication }
         rename { it.replace('pom-default.xml', 'pom.xml') }
     }
 }
@@ -75,8 +75,17 @@ signing {
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        offlineModeApp(MavenPublication) {
             from components.java
+
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
 
             pom {
                 name = 'Offline Mode Spring Boot Starter'
@@ -105,5 +114,18 @@ publishing {
             }
         }
     }
-}
+    repositories {
+        maven {
+            url = version.endsWith('SNAPSHOT')
+                    ? 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+                    : 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
 
+            credentials {
+                username ossrhUsername
+                password ossrhPassword
+            }
+        }
+
+
+    }
+}
