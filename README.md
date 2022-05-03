@@ -4,6 +4,12 @@ Offline Mode for Spring Boot
 <p align="center">
 Spring Boot Starter provides an Offline Mode for Spring Boot application.</p>
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=maciejkopecpl_offline-mode-spring-boot-starter&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=maciejkopecpl_offline-mode-spring-boot-starter)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=maciejkopecpl_offline-mode-spring-boot-starter&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=maciejkopecpl_offline-mode-spring-boot-starter)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=maciejkopecpl_offline-mode-spring-boot-starter&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=maciejkopecpl_offline-mode-spring-boot-starter)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=maciejkopecpl_offline-mode-spring-boot-starter&metric=coverage)](https://sonarcloud.io/summary/new_code?id=maciejkopecpl_offline-mode-spring-boot-starter)
+[![Build](https://github.com/maciejkopecpl/offline-mode-spring-boot-starter/actions/workflows/build.yml/badge.svg)](https://github.com/maciejkopecpl/offline-mode-spring-boot-starter/actions/workflows/build.yml)
+
 ## 🚀 Quick start
 
 1. Add dependency to your project
