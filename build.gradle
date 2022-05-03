@@ -8,6 +8,7 @@ plugins {
     id 'java-library'
     id "jacoco"
     id "org.sonarqube" version "3.3"
+    id 'signing'
 }
 
 group = 'pl.maciejkopec'
@@ -59,6 +60,19 @@ jar {
     }
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -71,7 +85,7 @@ publishing {
                 licenses {
                     license {
                         name = 'MIT License'
-                        url = 'http://www.opensource.org/licenses/mit-license.php'
+                        url = 'https://opensource.org/licenses/mit-license.php'
                     }
                 }
                 developers {
@@ -82,12 +96,14 @@ publishing {
                         url = 'https://maciejkopec.pl/'
                     }
                 }
-//				scm {
-//					connection = 'scm:git:git://example.com/my-library.git'
-//					developerConnection = 'scm:git:ssh://example.com/my-library.git'
-//					url = 'http://example.com/my-library/'
-//				}
+                scm {
+                    connection = 'scm:git://github.com/maciejkopecpl/offline-mode-spring-boot-starter.git'
+                    developerConnection = 'scm:git:ssh://github.com:maciejkopecpl/offline-mode-spring-boot-starter.git'
+                    url = 'https://github.com/maciejkopecpl/offline-mode-spring-boot-starter/tree/master'
+                }
+
             }
         }
     }
 }
+
