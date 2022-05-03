@@ -11,17 +11,18 @@ Spring Boot Starter providing an Offline Mode for Spring Boot application.
 
 Maven
 
-```
+```xml
+
 <dependency>
-  <groupId>pl.maciejkopec</groupId>
-  <artifactId>offline-mode-spring-boot-starter</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+    <groupId>pl.maciejkopec</groupId>
+    <artifactId>offline-mode-spring-boot-starter</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
 Gradle
 
-```
+```groovy
 implementation 'pl.maciejkopec:offline-mode-spring-boot-starter:1.0.0-SNAPSHOT'
 ```
 
