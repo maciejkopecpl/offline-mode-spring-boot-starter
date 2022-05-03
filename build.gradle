@@ -6,6 +6,8 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'maven-publish'
     id 'java-library'
+    id "jacoco"
+    id "org.sonarqube" version "3.3"
 }
 
 group = 'pl.maciejkopec'
@@ -33,6 +35,20 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "maciejkopecpl_offline-mode-spring-boot-starter"
+        property "sonar.organization", "maciejkopecpl"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
 
 jar {
