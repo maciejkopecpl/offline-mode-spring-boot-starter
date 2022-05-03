@@ -1,14 +1,15 @@
 package pl.maciejkopec.offlinemode.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
+import pl.maciejkopec.offlinemode.config.OfflineModeConfiguration;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
-import pl.maciejkopec.offlinemode.config.OfflineModeConfiguration;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -40,7 +41,7 @@ public class FileHandler {
       final Path dir = Files.createDirectories(path);
       Files.write(dir.resolve(filename), serializedObject.getBytes());
     } catch (final IOException e) {
-      e.printStackTrace();
+      log.error("Failed to write a file in {} for key {}", configuration.getPath(), key, e);
     } finally {
       log.debug("Leaving {}", METHOD);
     }
