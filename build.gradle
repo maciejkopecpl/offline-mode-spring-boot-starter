@@ -1,28 +1,76 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
 plugins {
 	id "io.freefair.lombok" version "6.2.0"
-	id 'org.springframework.boot' version '2.6.2'
+	id 'org.springframework.boot' version '2.6.2' apply false
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
+	id 'maven-publish'
+	id 'java-library'
 }
 
 group = 'pl.maciejkopec'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.5-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 repositories {
 	mavenCentral()
 }
 
+dependencyManagement {
+	imports {
+		mavenBom SpringBootPlugin.BOM_COORDINATES
+	}
+}
+
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.springframework.boot:spring-boot-starter-aop'
-	implementation 'org.springframework.boot:spring-boot-starter-json'
+	api 'org.springframework.boot:spring-boot-starter'
+	api 'org.springframework.boot:spring-boot-starter-aop'
+	api 'org.springframework.boot:spring-boot-starter-json'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
 test {
 	useJUnitPlatform()
+}
+
+jar {
+	into("META-INF/maven/${project.group}/${project.name}") {
+		from { generatePomFileForMavenJavaPublication }
+		rename { it.replace('pom-default.xml', 'pom.xml') }
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+
+			pom {
+				name = 'Offline Mode Spring Boot Starter'
+				description = 'Offline Mode for Spring Boot'
+				url = 'https://github.com/maciejkopecpl/offline-mode-spring-boot-starter'
+				licenses {
+					license {
+						name = 'MIT License'
+						url = 'http://www.opensource.org/licenses/mit-license.php'
+					}
+				}
+				developers {
+					developer {
+						id = 'maciejkopecpl'
+						name = 'Maciej Kopeć'
+						email = 'kontakt@maciejkopec.pl'
+						url = 'https://maciejkopec.pl/'
+					}
+				}
+//				scm {
+//					connection = 'scm:git:git://example.com/my-library.git'
+//					developerConnection = 'scm:git:ssh://example.com/my-library.git'
+//					url = 'http://example.com/my-library/'
+//				}
+			}
+		}
+	}
 }

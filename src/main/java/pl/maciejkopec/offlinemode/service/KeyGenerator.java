@@ -1,10 +1,5 @@
 package pl.maciejkopec.offlinemode.service;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -14,6 +9,19 @@ import org.springframework.expression.EvaluationContext;
 import pl.maciejkopec.offlinemode.annotation.OfflineMode;
 import pl.maciejkopec.offlinemode.expression.ExpressionEvaluator;
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+/**
+ * Generator used to create a key based on the method definition. <br>
+ * It supports two modes: argument based and SPeL based. <br>
+ * Argument based mode will generate key based on: type name, name of the method and method
+ * parameters. <br>
+ * SPeL mode use the SPeL expression defined in {@link OfflineMode#key()} to generate the key.
+ */
 @Slf4j
 public class KeyGenerator {
   private final ExpressionEvaluator evaluator = new ExpressionEvaluator();

@@ -18,7 +18,7 @@ import pl.maciejkopec.offlinemode.test.TestService;
     value = "classpath:application.yaml",
     properties = {
       "offline-mode.mode=serving",
-      "offline-mode.path='src/test/resources/data/serving'"
+      "offline-mode.path=src/test/resources/data/serving"
     })
 class ServingModeTests {
 
