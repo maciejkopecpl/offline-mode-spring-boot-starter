@@ -7,6 +7,7 @@ import pl.maciejkopec.offlinemode.config.OfflineModeConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,7 +40,7 @@ public class FileHandler {
 
     try {
       final Path dir = Files.createDirectories(path);
-      Files.write(dir.resolve(filename), serializedObject.getBytes());
+      Files.write(dir.resolve(filename), serializedObject.getBytes(StandardCharsets.UTF_8));
     } catch (final IOException e) {
       log.error("Failed to write a file in {} for key {}", configuration.getPath(), key, e);
     } finally {
