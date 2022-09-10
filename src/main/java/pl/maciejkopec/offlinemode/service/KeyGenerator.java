@@ -5,11 +5,9 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.expression.AnnotatedElementKey;
-import org.springframework.expression.EvaluationContext;
 import pl.maciejkopec.offlinemode.annotation.OfflineMode;
 import pl.maciejkopec.offlinemode.expression.ExpressionEvaluator;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Function;
@@ -36,10 +34,10 @@ public class KeyGenerator {
       };
 
   public String generate(final ProceedingJoinPoint joinPoint, final OfflineMode offlineMode) {
-    final String METHOD = "generate(ProceedingJoinPoint, OfflineMode)";
+    final var METHOD = "generate(ProceedingJoinPoint, OfflineMode)";
     log.debug("Entering {}", METHOD);
 
-    final String key =
+    final var key =
         Objects.equals(offlineMode.key(), "")
             ? argumentBasedKey(joinPoint)
             : spelBasedKey(joinPoint, offlineMode);
@@ -49,18 +47,18 @@ public class KeyGenerator {
   }
 
   private String spelBasedKey(final ProceedingJoinPoint joinPoint, final OfflineMode offlineMode) {
-    final String METHOD = "spelBasedKey(ProceedingJoinPoint, OfflineMode)";
+    final var METHOD = "spelBasedKey(ProceedingJoinPoint, OfflineMode)";
     log.debug("Entering {}", METHOD);
 
-    final MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-    final Method method = signature.getMethod();
-    final Class<?> targetClass = joinPoint.getTarget().getClass();
-    final EvaluationContext evaluationContext =
+    final var signature = (MethodSignature) joinPoint.getSignature();
+    final var method = signature.getMethod();
+    final var targetClass = joinPoint.getTarget().getClass();
+    final var evaluationContext =
         evaluator.createEvaluationContext(
             joinPoint.getTarget(), targetClass, method, joinPoint.getArgs());
-    final AnnotatedElementKey methodKey = new AnnotatedElementKey(method, targetClass);
+    final var methodKey = new AnnotatedElementKey(method, targetClass);
 
-    final String key = evaluator.key(offlineMode.key(), methodKey, evaluationContext).toString();
+    final var key = evaluator.key(offlineMode.key(), methodKey, evaluationContext).toString();
 
     log.debug("Generated key: `{}` for OfflineMode: `{}`", key, offlineMode);
 
@@ -69,13 +67,13 @@ public class KeyGenerator {
   }
 
   private String argumentBasedKey(final ProceedingJoinPoint joinPoint) {
-    final String METHOD = "argumentBasedKey(ProceedingJoinPoint)";
+    final var METHOD = "argumentBasedKey(ProceedingJoinPoint)";
     log.debug("Entering {}", METHOD);
 
-    final String arguments =
+    final var arguments =
         Arrays.stream(joinPoint.getArgs()).map(MAP_ARGUMENTS).collect(Collectors.joining("~"));
 
-    final String key =
+    final var key =
         String.format(
             "%s_%s_%s",
             joinPoint.getSignature().getDeclaringTypeName(),

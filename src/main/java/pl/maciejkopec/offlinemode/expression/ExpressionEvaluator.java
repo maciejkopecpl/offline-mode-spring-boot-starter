@@ -1,8 +1,5 @@
 package pl.maciejkopec.offlinemode.expression;
 
-import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.context.expression.AnnotatedElementKey;
@@ -13,6 +10,10 @@ import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import pl.maciejkopec.offlinemode.annotation.OfflineMode;
+
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class ExpressionEvaluator extends CachedExpressionEvaluator {
@@ -27,12 +28,12 @@ public class ExpressionEvaluator extends CachedExpressionEvaluator {
    */
   public EvaluationContext createEvaluationContext(
       final Object object, final Class<?> targetClass, final Method method, final Object[] args) {
-    final String METHOD = "createEvaluationContext(Object, Class, Method, Object[])";
+    final var METHOD = "createEvaluationContext(Object, Class, Method, Object[])";
     log.debug("Entering {}", METHOD);
 
-    final Method targetMethod = getTargetMethod(targetClass, method);
-    final ExpressionRootObject root = new ExpressionRootObject(object, args);
-    final MethodBasedEvaluationContext evaluationContext =
+    final var targetMethod = getTargetMethod(targetClass, method);
+    final var root = new ExpressionRootObject(object, args);
+    final var evaluationContext =
         new MethodBasedEvaluationContext(root, targetMethod, args, this.paramNameDiscoverer);
 
     log.debug("Leaving {}", METHOD);
@@ -44,10 +45,10 @@ public class ExpressionEvaluator extends CachedExpressionEvaluator {
       final String keyExpression,
       final AnnotatedElementKey methodKey,
       final EvaluationContext evalContext) {
-    final String METHOD = "key(String, AnnotatedElementKey, EvaluationContext)";
+    final var METHOD = "key(String, AnnotatedElementKey, EvaluationContext)";
     log.debug("Entering {}", METHOD);
 
-    final Object key =
+    final var key =
         getExpression(this.conditionCache, methodKey, keyExpression).getValue(evalContext);
 
     log.debug("Leaving {}", METHOD);
@@ -55,13 +56,13 @@ public class ExpressionEvaluator extends CachedExpressionEvaluator {
   }
 
   private Method getTargetMethod(final Class<?> targetClass, final Method method) {
-    final String METHOD = "getTargetMethod(Class, Method)";
+    final var METHOD = "getTargetMethod(Class, Method)";
     log.debug("Entering {}", METHOD);
 
-    final AnnotatedElementKey methodKey = new AnnotatedElementKey(method, targetClass);
-    final Method cachedTargetMethod = this.targetMethodCache.get(methodKey);
+    final var methodKey = new AnnotatedElementKey(method, targetClass);
+    final var cachedTargetMethod = this.targetMethodCache.get(methodKey);
     if (cachedTargetMethod == null) {
-      final Method targetMethod = AopUtils.getMostSpecificMethod(method, targetClass);
+      final var targetMethod = AopUtils.getMostSpecificMethod(method, targetClass);
       this.targetMethodCache.put(methodKey, targetMethod);
       log.debug(
           "Target method is not cached. Generated targetMethod: `{}` added to the cache.",

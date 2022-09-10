@@ -7,9 +7,7 @@ import pl.maciejkopec.offlinemode.config.OfflineModeConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @RequiredArgsConstructor
@@ -19,28 +17,28 @@ public class FileHandler {
   private final OfflineModeConfiguration configuration;
 
   public File read(@NonNull final String key) {
-    final String METHOD = "read(String)";
+    final var METHOD = "read(String)";
     log.debug("Entering {}", METHOD);
 
-    final String filename = key + ".json";
-    final Path path = Paths.get(configuration.getPath()).toAbsolutePath().normalize();
+    final var filename = key + ".json";
+    final var path = Paths.get(configuration.getPath()).toAbsolutePath().normalize();
 
-    final File file = path.resolve(filename).toFile();
+    final var file = path.resolve(filename).toFile();
 
     log.debug("Leaving {}", METHOD);
     return file;
   }
 
   public void write(@NonNull final String key, @NonNull final String serializedObject) {
-    final String METHOD = "write(String, String)";
+    final var METHOD = "write(String, String)";
     log.debug("Entering {}", METHOD);
 
-    final String filename = key + ".json";
-    final Path path = Paths.get(configuration.getPath()).toAbsolutePath().normalize();
+    final var filename = key + ".json";
+    final var path = Paths.get(configuration.getPath()).toAbsolutePath().normalize();
 
     try {
-      final Path dir = Files.createDirectories(path);
-      Files.write(dir.resolve(filename), serializedObject.getBytes(StandardCharsets.UTF_8));
+      final var dir = Files.createDirectories(path);
+      Files.writeString(dir.resolve(filename), serializedObject);
     } catch (final IOException e) {
       log.error("Failed to write a file in {} for key {}", configuration.getPath(), key, e);
     } finally {

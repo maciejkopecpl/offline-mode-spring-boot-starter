@@ -27,7 +27,7 @@ class DisabledTests {
 
   @Test
   void shouldCallActualMethodWhenDisabled() {
-    final String result = testService.simpleCall();
+    final var result = testService.simpleCall();
 
     assertThat(result).isEqualTo(EXPECTED_DYNAMIC_VALUE);
   }

@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import pl.maciejkopec.offlinemode.test.TestApplication;
-import pl.maciejkopec.offlinemode.test.TestFullDto;
-import pl.maciejkopec.offlinemode.test.TestFullDtoWithoutEquals;
-import pl.maciejkopec.offlinemode.test.TestService;
+import pl.maciejkopec.offlinemode.test.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,73 +28,81 @@ class ServingModeTests {
 
   @Test
   void shouldReturnSavedSimpleResponse() {
-    final String result = testService.simpleCall();
+    final var result = testService.simpleCall();
 
     assertThat(result).isEqualTo(EXPECTED_STATIC_VALUE);
   }
 
   @Test
   void shouldReturnSavedFullDtoResponse() {
-    final TestFullDto result = testService.dtoCall();
+    final var result = testService.dtoCall();
 
     assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
   }
 
   @Test
   void shouldReturnSavedFullDtoResponseWithParam() {
-    final TestFullDto result = testService.dtoCall("param_value");
+    final var result = testService.dtoCall("param_value");
 
     assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
   }
 
   @Test
   void shouldReturnSavedFullDtoResponseWithComplexParam() {
-    final TestFullDto complexObject = new TestFullDto();
+    final var complexObject = new TestFullDto();
     complexObject.setValue("complex");
-    final TestFullDto result = testService.dtoCall("param_value", complexObject);
+    final var result = testService.dtoCall("param_value", complexObject);
 
     assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
   }
 
   @Test
   void shouldReturnSavedFullDtoResponseWithComplexParamDifferentValue() {
-    final TestFullDto complexObject = new TestFullDto();
+    final var complexObject = new TestFullDto();
     complexObject.setValue("complex_different_value");
-    final TestFullDto result = testService.dtoCall("param_value", complexObject);
+    final var result = testService.dtoCall("param_value", complexObject);
 
     assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
   }
 
   @Test
   void shouldReturnSavedTestFullDtoWithoutEquals() {
-    final TestFullDtoWithoutEquals complexObject = new TestFullDtoWithoutEquals("value");
-    final TestFullDto result = testService.dtoCallWithCustomStaticKey("param_value", complexObject);
+    final var complexObject = new TestFullDtoWithoutEquals("value");
+    final var result = testService.dtoCallWithCustomStaticKey("param_value", complexObject);
 
     assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
   }
 
   @Test
   void shouldReturnSavedTestFullDto() {
-    final TestFullDtoWithoutEquals complexObject = new TestFullDtoWithoutEquals("test_parameter");
-    final TestFullDto result = testService.dtoCallWithCustomComplexKey(complexObject);
+    final var complexObject = new TestFullDtoWithoutEquals("test_parameter");
+    final var result = testService.dtoCallWithCustomComplexKey(complexObject);
 
     assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
   }
 
   @Test
   void shouldReuseCachedExpression() {
-    final TestFullDtoWithoutEquals complexObject = new TestFullDtoWithoutEquals("test_parameter");
+    final var complexObject = new TestFullDtoWithoutEquals("test_parameter");
     testService.dtoCallWithCustomComplexKey(complexObject);
-    final TestFullDto result = testService.dtoCallWithCustomComplexKey(complexObject);
+    final var result = testService.dtoCallWithCustomComplexKey(complexObject);
 
     assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
   }
 
   @Test
   void shouldNotFailIfDataFileIsMissing() {
-    final TestFullDtoWithoutEquals complexObject = new TestFullDtoWithoutEquals("test_parameter");
-    final TestFullDto result = testService.missConfigured(complexObject);
+    final var complexObject = new TestFullDtoWithoutEquals("test_parameter");
+    final var result = testService.missConfigured(complexObject);
 
     assertThat(result.getValue()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
+  }
+
+  @Test
+  void shouldReturnSavedTestRecordType() {
+    final var testRecord = new TestRecord("test_parameter");
+    final var result = testService.dtoCallWithRecordType(testRecord);
+
+    assertThat(result.value()).isEqualTo(EXPECTED_STATIC_VALUE);
   }
 }

@@ -1,16 +1,14 @@
 package pl.maciejkopec.offlinemode.service;
 
-import static pl.maciejkopec.offlinemode.config.OfflineModeConfiguration.Mode.LEARNING;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
 import pl.maciejkopec.offlinemode.annotation.OfflineMode;
 import pl.maciejkopec.offlinemode.config.OfflineModeConfiguration;
+
+import static pl.maciejkopec.offlinemode.config.OfflineModeConfiguration.Mode.LEARNING;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -24,16 +22,16 @@ public class ResponseCaptor {
 
   public Object capture(final ProceedingJoinPoint joinPoint, final OfflineMode offlineMode)
       throws Throwable {
-    final String METHOD = "capture(ProceedingJoinPoint, OfflineMode)";
+    final var METHOD = "capture(ProceedingJoinPoint, OfflineMode)";
     log.debug("Entering {}", METHOD);
 
-    final String key = keyGenerator.generate(joinPoint, offlineMode);
+    final var key = keyGenerator.generate(joinPoint, offlineMode);
 
     if (LEARNING.equals(configuration.getMode())) {
 
-      final Object object = joinPoint.proceed();
+      final var object = joinPoint.proceed();
 
-      final String serializedObject = objectMapper.writeValueAsString(object);
+      final var serializedObject = objectMapper.writeValueAsString(object);
 
       fileHandler.write(key, serializedObject);
 
@@ -41,12 +39,12 @@ public class ResponseCaptor {
       return object;
     } else {
 
-      final File read = fileHandler.read(key);
+      final var read = fileHandler.read(key);
 
       if (read.exists()) {
-        final Signature signature = joinPoint.getSignature();
-        final Class<?> returnType = ((MethodSignature) signature).getReturnType();
-        final Object value = objectMapper.readValue(read, returnType);
+        final var signature = joinPoint.getSignature();
+        final var returnType = ((MethodSignature) signature).getReturnType();
+        final var value = objectMapper.readValue(read, returnType);
 
         log.debug("Leaving {}", METHOD);
         return value;
@@ -56,7 +54,7 @@ public class ResponseCaptor {
             key,
             configuration.getPath(),
             LEARNING);
-        final Object proceed = joinPoint.proceed();
+        final var proceed = joinPoint.proceed();
 
         log.debug("Leaving {}", METHOD);
         return proceed;

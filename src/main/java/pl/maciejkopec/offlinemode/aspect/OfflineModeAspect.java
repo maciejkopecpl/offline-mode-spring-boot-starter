@@ -20,10 +20,10 @@ public class OfflineModeAspect {
   @Around("@annotation(offlineMode)")
   public Object captureOfflineCall(
       final ProceedingJoinPoint joinPoint, final OfflineMode offlineMode) throws Throwable {
-    final String METHOD = "captureOfflineCall(ProceedingJoinPoint, OfflineMode)";
+    final var METHOD = "captureOfflineCall(ProceedingJoinPoint, OfflineMode)";
     log.debug("Entering {}", METHOD);
 
-    final Object value =
+    final var value =
         configuration.isEnabled()
             ? responseCaptor.capture(joinPoint, offlineMode)
             : joinPoint.proceed();

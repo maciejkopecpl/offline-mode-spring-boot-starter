@@ -20,15 +20,13 @@ public class OfflineModeAutoConfiguration {
 
   @Bean
   public OfflineModeAspect offlineModeAspect() {
-    final String METHOD = "offlineModeAspect()";
+    final var METHOD = "offlineModeAspect()";
     log.debug("Entering {}", METHOD);
 
-    final KeyGenerator keyGenerator = new KeyGenerator();
-    final FileHandler fileHandler = new FileHandler(configuration);
-    final ResponseCaptor responseCaptor =
-        new ResponseCaptor(keyGenerator, fileHandler, configuration);
-    final OfflineModeAspect offlineModeAspect =
-        new OfflineModeAspect(responseCaptor, configuration);
+    final var keyGenerator = new KeyGenerator();
+    final var fileHandler = new FileHandler(configuration);
+    final var responseCaptor = new ResponseCaptor(keyGenerator, fileHandler, configuration);
+    final var offlineModeAspect = new OfflineModeAspect(responseCaptor, configuration);
 
     log.debug("Leaving {}", METHOD);
     return offlineModeAspect;

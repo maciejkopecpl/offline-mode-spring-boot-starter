@@ -15,21 +15,21 @@ public class TestService {
 
   @OfflineMode
   public TestFullDto dtoCall() {
-    final TestFullDto testFullDto = new TestFullDto();
+    final var testFullDto = new TestFullDto();
     testFullDto.setValue(DYNAMIC_DATA);
     return testFullDto;
   }
 
   @OfflineMode
   public TestFullDto dtoCall(final String param) {
-    final TestFullDto testFullDto = new TestFullDto();
+    final var testFullDto = new TestFullDto();
     testFullDto.setValue(param);
     return testFullDto;
   }
 
   @OfflineMode
   public TestFullDto dtoCall(final String param, final TestFullDto complexObject) {
-    final TestFullDto testFullDto = new TestFullDto();
+    final var testFullDto = new TestFullDto();
     testFullDto.setValue(param);
     return testFullDto;
   }
@@ -37,22 +37,27 @@ public class TestService {
   @OfflineMode(key = "'test'")
   public TestFullDto dtoCallWithCustomStaticKey(
       final String param, final TestFullDtoWithoutEquals complexObject) {
-    final TestFullDto testFullDto = new TestFullDto();
+    final var testFullDto = new TestFullDto();
     testFullDto.setValue(param);
     return testFullDto;
   }
 
   @OfflineMode(key = "'prefix_' + #complexObject.value")
   public TestFullDto dtoCallWithCustomComplexKey(final TestFullDtoWithoutEquals complexObject) {
-    final TestFullDto testFullDto = new TestFullDto();
+    final var testFullDto = new TestFullDto();
     testFullDto.setValue(DYNAMIC_DATA);
     return testFullDto;
   }
 
   @OfflineMode(key = "'missConfigured'")
   public TestFullDto missConfigured(final TestFullDtoWithoutEquals complexObject) {
-    final TestFullDto testFullDto = new TestFullDto();
+    final var testFullDto = new TestFullDto();
     testFullDto.setValue(DYNAMIC_DATA);
     return testFullDto;
+  }
+
+  @OfflineMode(key = "'prefix_record_' + #testRecord.value")
+  public TestRecord dtoCallWithRecordType(final TestRecord testRecord) {
+    return new TestRecord(DYNAMIC_DATA);
   }
 }
