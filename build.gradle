@@ -13,8 +13,8 @@ plugins {
 }
 
 group = 'pl.maciejkopec'
-version = '1.0.2'
-sourceCompatibility = '17'
+version = '1.0.3'
+sourceCompatibility = '16'
 
 repositories {
     mavenCentral()
