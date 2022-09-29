@@ -14,7 +14,7 @@ plugins {
 
 group = 'pl.maciejkopec'
 version = '1.0.2'
-sourceCompatibility = '17'
+sourceCompatibility = '16'
 
 repositories {
     mavenCentral()
