@@ -7,6 +7,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import pl.maciejkopec.offlinemode.test.*;
 
+import java.util.Arrays;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -104,5 +106,37 @@ class ServingModeTests {
     final var result = testService.dtoCallWithRecordType(testRecord);
 
     assertThat(result.value()).isEqualTo(EXPECTED_STATIC_VALUE);
+  }
+
+  @Test
+  void shouldReturnSavedCollectionListJson() {
+    final var result = testService.dtoCallWithListResponse();
+
+    assertThat(result).hasSize(1);
+    assertThat(result.get(0).value()).isEqualTo(EXPECTED_STATIC_VALUE);
+  }
+
+  @Test
+  void shouldReturnSavedCollectionSetJson() {
+    final var result = testService.dtoCallWithSetResponse();
+
+    assertThat(result).hasSize(1);
+    assertThat(result.stream().findFirst().get().value()).isEqualTo(EXPECTED_STATIC_VALUE);
+  }
+
+  @Test
+  void shouldReturnSavedCollectionMapJson() {
+    final var result = testService.dtoCallWithMapResponse();
+
+    assertThat(result).hasSize(1);
+    assertThat(result.get("key").value()).isEqualTo(EXPECTED_STATIC_VALUE);
+  }
+
+  @Test
+  void shouldReturnSavedCollectionArrayJson() {
+    final var result = testService.dtoCallWithArrayResponse();
+
+    assertThat(result).hasSize(1);
+    assertThat(Arrays.stream(result).findFirst().get().value()).isEqualTo(EXPECTED_STATIC_VALUE);
   }
 }

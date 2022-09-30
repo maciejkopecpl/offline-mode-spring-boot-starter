@@ -93,6 +93,9 @@ With this starter, you can prepare data on your own. You can run your applicatio
 process up, but nothing stops you from creating the response file from scratch. It is very easy to provide many
 responses based on the input parameters, which makes this tool great for testing and development!
 
+### ⚠️Limitations
+Maps with complex keys are not supported.
+
 ### ⛔ Production use
 
 This is not meant for production! The problems this starter helps to solve are mainly related to lower environments or
