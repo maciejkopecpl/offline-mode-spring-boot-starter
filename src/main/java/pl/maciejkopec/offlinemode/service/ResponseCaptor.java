@@ -76,16 +76,21 @@ public class ResponseCaptor {
     }
   }
 
-  private JavaType resolveReturnType(OfflineMode offlineMode, Class returnType, Class<?> clazz) {
+  private JavaType resolveReturnType(OfflineMode offlineMode, Class<?> returnType, Class<?> clazz) {
     final var METHOD = "resolveReturnType(OfflineMode, Class, Class<?>)";
     log.debug("Entering {}", METHOD);
 
     JavaType type;
     if (Map.class.isAssignableFrom(returnType)) {
       type =
-          objectMapper.getTypeFactory().constructMapType(returnType, offlineMode.keyClass(), clazz);
+          objectMapper
+              .getTypeFactory()
+              .constructMapType((Class<? extends Map>) returnType, offlineMode.keyClass(), clazz);
     } else if (Collection.class.isAssignableFrom(returnType)) {
-      type = objectMapper.getTypeFactory().constructCollectionType(returnType, clazz);
+      type =
+          objectMapper
+              .getTypeFactory()
+              .constructCollectionType((Class<? extends Collection>) returnType, clazz);
     } else if (returnType.isArray()) {
       type = objectMapper.getTypeFactory().constructArrayType(clazz);
     } else {
