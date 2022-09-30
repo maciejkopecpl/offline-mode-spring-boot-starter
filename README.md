@@ -21,14 +21,14 @@ Maven
 <dependency>
     <groupId>pl.maciejkopec</groupId>
     <artifactId>offline-mode-spring-boot-starter</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 
 Gradle
 
 ```groovy
-implementation 'pl.maciejkopec:offline-mode-spring-boot-starter:1.0.3'
+implementation 'pl.maciejkopec:offline-mode-spring-boot-starter:1.0.4'
 ```
 
 2. Enable Offline Mode in `LEARNING` mode
