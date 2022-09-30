@@ -1,6 +1,7 @@
 package pl.maciejkopec.offlinemode;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -109,6 +110,56 @@ class LearningModeTests {
     final var result = testService.dtoCallWithRecordType(testRecord);
 
     assertThat(result.value()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
+    assertThat(file).exists();
+  }
+
+  @Test
+  void shouldGenerateCollectionListJson() {
+    final var file = new File(TEST_FILES_PATH + "/collection_list.json");
+    assertThat(file).doesNotExist();
+    final var result = testService.dtoCallWithListResponse();
+
+    assertThat(result).hasSize(1);
+    assertThat(file).exists();
+  }
+
+  @Test
+  void shouldGenerateCollectionSetJson() {
+    final var file = new File(TEST_FILES_PATH + "/collection_set.json");
+    assertThat(file).doesNotExist();
+    final var result = testService.dtoCallWithSetResponse();
+
+    assertThat(result).hasSize(1);
+    assertThat(file).exists();
+  }
+
+  @Test
+  void shouldGenerateCollectionMapJson() {
+    final var file = new File(TEST_FILES_PATH + "/collection_map.json");
+    assertThat(file).doesNotExist();
+    final var result = testService.dtoCallWithMapResponse();
+
+    assertThat(result).hasSize(1);
+    assertThat(file).exists();
+  }
+
+  @Test
+  void shouldThrowExceptionForMisconfiguredMapCall() {
+    IllegalArgumentException illegalArgumentException =
+        Assertions.assertThrows(
+            IllegalArgumentException.class, () -> testService.dtoCallWithMapMisconfigured());
+
+    assertThat(illegalArgumentException.getMessage())
+        .isEqualTo("Define keyClass() in OfflineMode annotation");
+  }
+
+  @Test
+  void shouldGenerateCollectionArrayJson() {
+    final var file = new File(TEST_FILES_PATH + "/collection_array.json");
+    assertThat(file).doesNotExist();
+    final var result = testService.dtoCallWithArrayResponse();
+
+    assertThat(result).hasSize(1);
     assertThat(file).exists();
   }
 }

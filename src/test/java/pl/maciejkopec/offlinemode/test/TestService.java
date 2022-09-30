@@ -3,6 +3,10 @@ package pl.maciejkopec.offlinemode.test;
 import org.springframework.stereotype.Service;
 import pl.maciejkopec.offlinemode.annotation.OfflineMode;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 @Service
 public class TestService {
 
@@ -59,5 +63,30 @@ public class TestService {
   @OfflineMode(key = "'prefix_record_' + #testRecord.value")
   public TestRecord dtoCallWithRecordType(final TestRecord testRecord) {
     return new TestRecord(DYNAMIC_DATA);
+  }
+
+  @OfflineMode(key = "'collection_list'", elementClass = TestRecord.class)
+  public List<TestRecord> dtoCallWithListResponse() {
+    return List.of(new TestRecord(DYNAMIC_DATA));
+  }
+
+  @OfflineMode(key = "'collection_set'", elementClass = TestRecord.class)
+  public Set<TestRecord> dtoCallWithSetResponse() {
+    return Set.of(new TestRecord(DYNAMIC_DATA));
+  }
+
+  @OfflineMode(key = "'collection_map'", elementClass = TestRecord.class, keyClass = String.class)
+  public Map<String, TestRecord> dtoCallWithMapResponse() {
+    return Map.of("key", new TestRecord(DYNAMIC_DATA));
+  }
+
+  @OfflineMode(key = "'collection_map'", elementClass = TestRecord.class)
+  public Map<String, TestRecord> dtoCallWithMapMisconfigured() {
+    return Map.of("key", new TestRecord(DYNAMIC_DATA));
+  }
+
+  @OfflineMode(key = "'collection_array'", elementClass = TestRecord.class)
+  public TestRecord[] dtoCallWithArrayResponse() {
+    return new TestRecord[] {new TestRecord(DYNAMIC_DATA)};
   }
 }

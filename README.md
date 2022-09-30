@@ -21,14 +21,14 @@ Maven
 <dependency>
     <groupId>pl.maciejkopec</groupId>
     <artifactId>offline-mode-spring-boot-starter</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 
 Gradle
 
 ```groovy
-implementation 'pl.maciejkopec:offline-mode-spring-boot-starter:1.0.3'
+implementation 'pl.maciejkopec:offline-mode-spring-boot-starter:1.0.4'
 ```
 
 2. Enable Offline Mode in `LEARNING` mode
@@ -92,6 +92,9 @@ calls, once data is cached it doesn't change.
 With this starter, you can prepare data on your own. You can run your application in `LEARNING` mode to speed this
 process up, but nothing stops you from creating the response file from scratch. It is very easy to provide many
 responses based on the input parameters, which makes this tool great for testing and development!
+
+### ⚠️Limitations
+Maps with complex keys are not supported.
 
 ### ⛔ Production use
 
