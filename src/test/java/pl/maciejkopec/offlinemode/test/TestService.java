@@ -54,10 +54,24 @@ public class TestService {
   }
 
   @OfflineMode(key = "'missConfigured'")
-  public TestFullDto missConfigured(final TestFullDtoWithoutEquals complexObject) {
+  public TestFullDto missConfigured() {
     final var testFullDto = new TestFullDto();
     testFullDto.setValue(DYNAMIC_DATA);
     return testFullDto;
+  }
+
+  @OfflineMode(key = "'missConfigured_missing_elementClass'")
+  public Set<TestFullDto> missConfiguredMissingElementClass() {
+    final var testFullDto = new TestFullDto();
+    testFullDto.setValue(DYNAMIC_DATA);
+    return Set.of(testFullDto);
+  }
+
+  @OfflineMode(key = "'missConfigured_missing_keyClass'")
+  public Map<String, TestFullDto> missConfiguredMissingKeyClass() {
+    final var testFullDto = new TestFullDto();
+    testFullDto.setValue(DYNAMIC_DATA);
+    return Map.of("test", testFullDto);
   }
 
   @OfflineMode(key = "'prefix_record_' + #testRecord.value")

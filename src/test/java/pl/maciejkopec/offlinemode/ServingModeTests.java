@@ -1,5 +1,7 @@
 package pl.maciejkopec.offlinemode;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +12,7 @@ import pl.maciejkopec.offlinemode.test.*;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @ContextConfiguration(classes = TestApplication.class)
@@ -28,115 +31,145 @@ class ServingModeTests {
     assertThat(testService).isNotNull();
   }
 
-  @Test
-  void shouldReturnSavedSimpleResponse() {
-    final var result = testService.simpleCall();
+  @Nested
+  @DisplayName("General tests cases")
+  class GeneralTests {
+    @Test
+    void shouldReturnSavedSimpleResponse() {
+      final var result = testService.simpleCall();
 
-    assertThat(result).isEqualTo(EXPECTED_STATIC_VALUE);
+      assertThat(result).isEqualTo(EXPECTED_STATIC_VALUE);
+    }
+
+    @Test
+    void shouldReturnSavedFullDtoResponse() {
+      final var result = testService.dtoCall();
+
+      assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
+    }
+
+    @Test
+    void shouldReturnSavedFullDtoResponseWithParam() {
+      final var result = testService.dtoCall("param_value");
+
+      assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
+    }
+
+    @Test
+    void shouldReturnSavedFullDtoResponseWithComplexParam() {
+      final var complexObject = new TestFullDto();
+      complexObject.setValue("complex");
+      final var result = testService.dtoCall("param_value", complexObject);
+
+      assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
+    }
+
+    @Test
+    void shouldReturnSavedFullDtoResponseWithComplexParamDifferentValue() {
+      final var complexObject = new TestFullDto();
+      complexObject.setValue("complex_different_value");
+      final var result = testService.dtoCall("param_value", complexObject);
+
+      assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
+    }
+
+    @Test
+    void shouldReturnSavedTestFullDtoWithoutEquals() {
+      final var complexObject = new TestFullDtoWithoutEquals("value");
+      final var result = testService.dtoCallWithCustomStaticKey("param_value", complexObject);
+
+      assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
+    }
+
+    @Test
+    void shouldReturnSavedTestFullDto() {
+      final var complexObject = new TestFullDtoWithoutEquals("test_parameter");
+      final var result = testService.dtoCallWithCustomComplexKey(complexObject);
+
+      assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
+    }
+
+    @Test
+    void shouldReuseCachedExpression() {
+      final var complexObject = new TestFullDtoWithoutEquals("test_parameter");
+      testService.dtoCallWithCustomComplexKey(complexObject);
+      final var result = testService.dtoCallWithCustomComplexKey(complexObject);
+
+      assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
+    }
+
+    @Test
+    void shouldNotFailIfDataFileIsMissing() {
+      final var result = testService.missConfigured();
+
+      assertThat(result.getValue()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
+    }
+
+    @Test
+    void shouldReturnSavedTestRecordType() {
+      final var testRecord = new TestRecord("test_parameter");
+      final var result = testService.dtoCallWithRecordType(testRecord);
+
+      assertThat(result.value()).isEqualTo(EXPECTED_STATIC_VALUE);
+    }
   }
 
-  @Test
-  void shouldReturnSavedFullDtoResponse() {
-    final var result = testService.dtoCall();
+  @Nested
+  @DisplayName("Tests related with annotation usage validation")
+  class ValidationTests {
+    @Test
+    void shouldThrowExceptionWhenElementClassIsMissing() {
+      final var exception =
+          assertThrows(
+              IllegalArgumentException.class,
+              () -> testService.missConfiguredMissingElementClass());
 
-    assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
+      assertThat(exception).hasMessageContaining("Define elementClass() in OfflineMode annotation");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenKeyClassIsMissing() {
+      final var exception =
+          assertThrows(
+              IllegalArgumentException.class, () -> testService.missConfiguredMissingKeyClass());
+
+      assertThat(exception).hasMessageContaining("Define keyClass() in OfflineMode annotation");
+    }
   }
 
-  @Test
-  void shouldReturnSavedFullDtoResponseWithParam() {
-    final var result = testService.dtoCall("param_value");
+  @Nested
+  @DisplayName("Tests related with collection return types")
+  class CollectionReturnTypeTests {
+    @Test
+    void shouldReturnSavedCollectionListJson() {
+      final var result = testService.dtoCallWithListResponse();
 
-    assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
-  }
+      assertThat(result).hasSize(1);
+      assertThat(result.get(0).value()).isEqualTo(EXPECTED_STATIC_VALUE);
+    }
 
-  @Test
-  void shouldReturnSavedFullDtoResponseWithComplexParam() {
-    final var complexObject = new TestFullDto();
-    complexObject.setValue("complex");
-    final var result = testService.dtoCall("param_value", complexObject);
+    @Test
+    void shouldReturnSavedCollectionSetJson() {
+      final var result = testService.dtoCallWithSetResponse();
 
-    assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
-  }
+      assertThat(result).hasSize(1);
+      assertThat(result.stream().findFirst().get().value()).isEqualTo(EXPECTED_STATIC_VALUE);
+    }
 
-  @Test
-  void shouldReturnSavedFullDtoResponseWithComplexParamDifferentValue() {
-    final var complexObject = new TestFullDto();
-    complexObject.setValue("complex_different_value");
-    final var result = testService.dtoCall("param_value", complexObject);
+    @Test
+    void shouldReturnSavedCollectionMapJson() {
+      final var result = testService.dtoCallWithMapResponse();
 
-    assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
-  }
+      assertThat(result).hasSize(1);
+      assertThat(result.get("key").value()).isEqualTo(EXPECTED_STATIC_VALUE);
+    }
 
-  @Test
-  void shouldReturnSavedTestFullDtoWithoutEquals() {
-    final var complexObject = new TestFullDtoWithoutEquals("value");
-    final var result = testService.dtoCallWithCustomStaticKey("param_value", complexObject);
+    @Test
+    void shouldReturnSavedCollectionArrayJson() {
+      final var result = testService.dtoCallWithArrayResponse();
 
-    assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
-  }
-
-  @Test
-  void shouldReturnSavedTestFullDto() {
-    final var complexObject = new TestFullDtoWithoutEquals("test_parameter");
-    final var result = testService.dtoCallWithCustomComplexKey(complexObject);
-
-    assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
-  }
-
-  @Test
-  void shouldReuseCachedExpression() {
-    final var complexObject = new TestFullDtoWithoutEquals("test_parameter");
-    testService.dtoCallWithCustomComplexKey(complexObject);
-    final var result = testService.dtoCallWithCustomComplexKey(complexObject);
-
-    assertThat(result.getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
-  }
-
-  @Test
-  void shouldNotFailIfDataFileIsMissing() {
-    final var complexObject = new TestFullDtoWithoutEquals("test_parameter");
-    final var result = testService.missConfigured(complexObject);
-
-    assertThat(result.getValue()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
-  }
-
-  @Test
-  void shouldReturnSavedTestRecordType() {
-    final var testRecord = new TestRecord("test_parameter");
-    final var result = testService.dtoCallWithRecordType(testRecord);
-
-    assertThat(result.value()).isEqualTo(EXPECTED_STATIC_VALUE);
-  }
-
-  @Test
-  void shouldReturnSavedCollectionListJson() {
-    final var result = testService.dtoCallWithListResponse();
-
-    assertThat(result).hasSize(1);
-    assertThat(result.get(0).value()).isEqualTo(EXPECTED_STATIC_VALUE);
-  }
-
-  @Test
-  void shouldReturnSavedCollectionSetJson() {
-    final var result = testService.dtoCallWithSetResponse();
-
-    assertThat(result).hasSize(1);
-    assertThat(result.stream().findFirst().get().value()).isEqualTo(EXPECTED_STATIC_VALUE);
-  }
-
-  @Test
-  void shouldReturnSavedCollectionMapJson() {
-    final var result = testService.dtoCallWithMapResponse();
-
-    assertThat(result).hasSize(1);
-    assertThat(result.get("key").value()).isEqualTo(EXPECTED_STATIC_VALUE);
-  }
-
-  @Test
-  void shouldReturnSavedCollectionArrayJson() {
-    final var result = testService.dtoCallWithArrayResponse();
-
-    assertThat(result).hasSize(1);
-    assertThat(Arrays.stream(result).findFirst().get().value()).isEqualTo(EXPECTED_STATIC_VALUE);
+      assertThat(result).hasSize(1);
+      assertThat(Arrays.stream(result).findFirst().get().value()).isEqualTo(EXPECTED_STATIC_VALUE);
+    }
   }
 }

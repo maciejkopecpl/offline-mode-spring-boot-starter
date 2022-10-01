@@ -1,8 +1,6 @@
 package pl.maciejkopec.offlinemode;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -42,124 +40,133 @@ class LearningModeTests {
     assertThat(testService).isNotNull();
   }
 
-  @Test
-  void shouldReturnSavedSimpleResponse() {
-    final var file =
-        new File(TEST_FILES_PATH + "/pl.maciejkopec.offlinemode.test.TestService_simpleCall_.json");
-    assertThat(file).doesNotExist();
+  @Nested
+  @DisplayName("General test cases")
+  class GeneralTests {
+    @Test
+    void shouldReturnSavedSimpleResponse() {
+      final var file =
+          new File(
+              TEST_FILES_PATH + "/pl.maciejkopec.offlinemode.test.TestService_simpleCall_.json");
+      assertThat(file).doesNotExist();
 
-    final var result = testService.simpleCall();
+      final var result = testService.simpleCall();
 
-    assertThat(result).isEqualTo(EXPECTED_DYNAMIC_VALUE);
-    assertThat(file).exists();
+      assertThat(result).isEqualTo(EXPECTED_DYNAMIC_VALUE);
+      assertThat(file).exists();
+    }
+
+    @Test
+    void shouldReturnSavedFullDtoResponse() {
+      final var file =
+          new File(TEST_FILES_PATH + "/pl.maciejkopec.offlinemode.test.TestService_dtoCall_.json");
+      assertThat(file).doesNotExist();
+      final var result = testService.dtoCall();
+
+      assertThat(result.getValue()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
+      assertThat(file).exists();
+    }
+
+    @Test
+    void shouldReturnSavedFullDtoResponseWithParam() {
+      final var file =
+          new File(
+              TEST_FILES_PATH
+                  + "/pl.maciejkopec.offlinemode.test.TestService_dtoCall_dynamic_data.json");
+      assertThat(file).doesNotExist();
+
+      final var result = testService.dtoCall("dynamic_data");
+
+      assertThat(result.getValue()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
+      assertThat(file).exists();
+    }
+
+    @Test
+    void shouldReturnSavedTestFullDtoWithoutEquals() {
+      final var file = new File(TEST_FILES_PATH + "/test.json");
+      assertThat(file).doesNotExist();
+
+      final var complexObject = new TestFullDtoWithoutEquals("value");
+      final var result = testService.dtoCallWithCustomStaticKey("dynamic_data", complexObject);
+
+      assertThat(result.getValue()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
+      assertThat(file).exists();
+    }
+
+    @Test
+    void shouldReturnSavedTestFullDto() {
+      final var file = new File(TEST_FILES_PATH + "/prefix_test_parameter.json");
+      assertThat(file).doesNotExist();
+      final var complexObject = new TestFullDtoWithoutEquals("test_parameter");
+      final var result = testService.dtoCallWithCustomComplexKey(complexObject);
+
+      assertThat(result.getValue()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
+      assertThat(file).exists();
+    }
+
+    @Test
+    void shouldReturnSavedRecord() {
+      final var file = new File(TEST_FILES_PATH + "/prefix_record_test_parameter.json");
+      assertThat(file).doesNotExist();
+      final var testRecord = new TestRecord("test_parameter");
+      final var result = testService.dtoCallWithRecordType(testRecord);
+
+      assertThat(result.value()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
+      assertThat(file).exists();
+    }
   }
 
-  @Test
-  void shouldReturnSavedFullDtoResponse() {
-    final var file =
-        new File(TEST_FILES_PATH + "/pl.maciejkopec.offlinemode.test.TestService_dtoCall_.json");
-    assertThat(file).doesNotExist();
-    final var result = testService.dtoCall();
+  @Nested
+  @DisplayName("Collection related test cases")
+  class CollectionTests {
+    @Test
+    void shouldGenerateCollectionListJson() {
+      final var file = new File(TEST_FILES_PATH + "/collection_list.json");
+      assertThat(file).doesNotExist();
+      final var result = testService.dtoCallWithListResponse();
 
-    assertThat(result.getValue()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
-    assertThat(file).exists();
-  }
+      assertThat(result).hasSize(1);
+      assertThat(file).exists();
+    }
 
-  @Test
-  void shouldReturnSavedFullDtoResponseWithParam() {
-    final var file =
-        new File(
-            TEST_FILES_PATH
-                + "/pl.maciejkopec.offlinemode.test.TestService_dtoCall_dynamic_data.json");
-    assertThat(file).doesNotExist();
+    @Test
+    void shouldGenerateCollectionSetJson() {
+      final var file = new File(TEST_FILES_PATH + "/collection_set.json");
+      assertThat(file).doesNotExist();
+      final var result = testService.dtoCallWithSetResponse();
 
-    final var result = testService.dtoCall("dynamic_data");
+      assertThat(result).hasSize(1);
+      assertThat(file).exists();
+    }
 
-    assertThat(result.getValue()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
-    assertThat(file).exists();
-  }
+    @Test
+    void shouldGenerateCollectionMapJson() {
+      final var file = new File(TEST_FILES_PATH + "/collection_map.json");
+      assertThat(file).doesNotExist();
+      final var result = testService.dtoCallWithMapResponse();
 
-  @Test
-  void shouldReturnSavedTestFullDtoWithoutEquals() {
-    final var file = new File(TEST_FILES_PATH + "/test.json");
-    assertThat(file).doesNotExist();
+      assertThat(result).hasSize(1);
+      assertThat(file).exists();
+    }
 
-    final var complexObject = new TestFullDtoWithoutEquals("value");
-    final var result = testService.dtoCallWithCustomStaticKey("dynamic_data", complexObject);
+    @Test
+    void shouldThrowExceptionForMisconfiguredMapCall() {
+      IllegalArgumentException illegalArgumentException =
+          Assertions.assertThrows(
+              IllegalArgumentException.class, () -> testService.dtoCallWithMapMisconfigured());
 
-    assertThat(result.getValue()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
-    assertThat(file).exists();
-  }
+      assertThat(illegalArgumentException.getMessage())
+          .isEqualTo("Define keyClass() in OfflineMode annotation");
+    }
 
-  @Test
-  void shouldReturnSavedTestFullDto() {
-    final var file = new File(TEST_FILES_PATH + "/prefix_test_parameter.json");
-    assertThat(file).doesNotExist();
-    final var complexObject = new TestFullDtoWithoutEquals("test_parameter");
-    final var result = testService.dtoCallWithCustomComplexKey(complexObject);
+    @Test
+    void shouldGenerateCollectionArrayJson() {
+      final var file = new File(TEST_FILES_PATH + "/collection_array.json");
+      assertThat(file).doesNotExist();
+      final var result = testService.dtoCallWithArrayResponse();
 
-    assertThat(result.getValue()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
-    assertThat(file).exists();
-  }
-
-  @Test
-  void shouldReturnSavedRecord() {
-    final var file = new File(TEST_FILES_PATH + "/prefix_record_test_parameter.json");
-    assertThat(file).doesNotExist();
-    final var testRecord = new TestRecord("test_parameter");
-    final var result = testService.dtoCallWithRecordType(testRecord);
-
-    assertThat(result.value()).isEqualTo(EXPECTED_DYNAMIC_VALUE);
-    assertThat(file).exists();
-  }
-
-  @Test
-  void shouldGenerateCollectionListJson() {
-    final var file = new File(TEST_FILES_PATH + "/collection_list.json");
-    assertThat(file).doesNotExist();
-    final var result = testService.dtoCallWithListResponse();
-
-    assertThat(result).hasSize(1);
-    assertThat(file).exists();
-  }
-
-  @Test
-  void shouldGenerateCollectionSetJson() {
-    final var file = new File(TEST_FILES_PATH + "/collection_set.json");
-    assertThat(file).doesNotExist();
-    final var result = testService.dtoCallWithSetResponse();
-
-    assertThat(result).hasSize(1);
-    assertThat(file).exists();
-  }
-
-  @Test
-  void shouldGenerateCollectionMapJson() {
-    final var file = new File(TEST_FILES_PATH + "/collection_map.json");
-    assertThat(file).doesNotExist();
-    final var result = testService.dtoCallWithMapResponse();
-
-    assertThat(result).hasSize(1);
-    assertThat(file).exists();
-  }
-
-  @Test
-  void shouldThrowExceptionForMisconfiguredMapCall() {
-    IllegalArgumentException illegalArgumentException =
-        Assertions.assertThrows(
-            IllegalArgumentException.class, () -> testService.dtoCallWithMapMisconfigured());
-
-    assertThat(illegalArgumentException.getMessage())
-        .isEqualTo("Define keyClass() in OfflineMode annotation");
-  }
-
-  @Test
-  void shouldGenerateCollectionArrayJson() {
-    final var file = new File(TEST_FILES_PATH + "/collection_array.json");
-    assertThat(file).doesNotExist();
-    final var result = testService.dtoCallWithArrayResponse();
-
-    assertThat(result).hasSize(1);
-    assertThat(file).exists();
+      assertThat(result).hasSize(1);
+      assertThat(file).exists();
+    }
   }
 }

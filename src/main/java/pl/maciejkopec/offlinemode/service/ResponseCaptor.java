@@ -33,12 +33,7 @@ public class ResponseCaptor {
     final var signature = joinPoint.getSignature();
     final var returnType = ((MethodSignature) signature).getReturnType();
 
-    if (Void.class.equals(offlineMode.keyClass()) && Map.class.isAssignableFrom(returnType)) {
-      log.error(
-          "OfflineMode is misconfigured. For Map-like return types define keyClass. Only simple types are supported. @OfflineMode= {}",
-          offlineMode);
-      throw new IllegalArgumentException("Define keyClass() in OfflineMode annotation");
-    }
+    validation(offlineMode, returnType);
 
     if (LEARNING.equals(configuration.getMode())) {
 
@@ -76,7 +71,25 @@ public class ResponseCaptor {
     }
   }
 
-  private JavaType resolveReturnType(OfflineMode offlineMode, Class<?> returnType, Class<?> clazz) {
+  private static void validation(final OfflineMode offlineMode, final Class<?> returnType) {
+    if (Void.class.equals(offlineMode.keyClass()) && Map.class.isAssignableFrom(returnType)) {
+      log.error(
+          "OfflineMode is misconfigured. For Map-like return types define keyClass. Only simple types are supported. @OfflineMode= {}",
+          offlineMode);
+      throw new IllegalArgumentException("Define keyClass() in OfflineMode annotation");
+    }
+
+    if (Void.class.equals(offlineMode.elementClass())
+        && Collection.class.isAssignableFrom(returnType)) {
+      log.error(
+          "OfflineMode is misconfigured. For Collection-like return types define elementClass. @OfflineMode= {}",
+          offlineMode);
+      throw new IllegalArgumentException("Define elementClass() in OfflineMode annotation");
+    }
+  }
+
+  private JavaType resolveReturnType(
+      final OfflineMode offlineMode, final Class<?> returnType, final Class<?> clazz) {
     final var METHOD = "resolveReturnType(OfflineMode, Class, Class<?>)";
     log.debug("Entering {}", METHOD);
 
