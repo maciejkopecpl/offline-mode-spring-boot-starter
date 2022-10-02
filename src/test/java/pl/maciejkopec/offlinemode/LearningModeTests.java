@@ -49,11 +49,13 @@ class LearningModeTests {
           new File(
               TEST_FILES_PATH + "/pl.maciejkopec.offlinemode.test.TestService_simpleCall_.json");
       assertThat(file).doesNotExist();
+      final var lastModified = file.lastModified();
 
       final var result = testService.simpleCall();
 
       assertThat(result).isEqualTo(EXPECTED_DYNAMIC_VALUE);
       assertThat(file).exists();
+      assertThat(file.lastModified()).isGreaterThan(lastModified);
     }
 
     @Test

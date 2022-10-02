@@ -12,6 +12,7 @@ import pl.maciejkopec.offlinemode.config.OfflineModeConfiguration;
 import java.util.Collection;
 import java.util.Map;
 
+import static pl.maciejkopec.offlinemode.config.OfflineModeConfiguration.Mode;
 import static pl.maciejkopec.offlinemode.config.OfflineModeConfiguration.Mode.LEARNING;
 
 @RequiredArgsConstructor
@@ -35,7 +36,7 @@ public class ResponseCaptor {
 
     validation(offlineMode, returnType);
 
-    if (LEARNING.equals(configuration.getMode())) {
+    if (Mode.isLearningEnabled(configuration.getMode())) {
 
       final var object = joinPoint.proceed();
 
