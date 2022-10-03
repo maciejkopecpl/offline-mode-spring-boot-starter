@@ -16,7 +16,4 @@ public @interface OfflineMode {
 
   /** Class type of the map's element. Only simple types are supported (String, Integer etc). */
   Class<?> keyClass() default Void.class;
-
-  /** Flag to override */
-  boolean enabled() default true;
 }

@@ -1,6 +1,9 @@
 package pl.maciejkopec.offlinemode;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -149,16 +152,6 @@ class LearningModeTests {
 
       assertThat(result).hasSize(1);
       assertThat(file).exists();
-    }
-
-    @Test
-    void shouldThrowExceptionForMisconfiguredMapCall() {
-      IllegalArgumentException illegalArgumentException =
-          Assertions.assertThrows(
-              IllegalArgumentException.class, () -> testService.dtoCallWithMapMisconfigured());
-
-      assertThat(illegalArgumentException.getMessage())
-          .isEqualTo("Define keyClass() in OfflineMode annotation");
     }
 
     @Test

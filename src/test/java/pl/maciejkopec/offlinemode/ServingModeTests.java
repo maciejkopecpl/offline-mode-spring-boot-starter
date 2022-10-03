@@ -12,7 +12,6 @@ import pl.maciejkopec.offlinemode.test.*;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @ContextConfiguration(classes = TestApplication.class)
@@ -111,29 +110,6 @@ class ServingModeTests {
       final var result = testService.dtoCallWithRecordType(testRecord);
 
       assertThat(result.value()).isEqualTo(EXPECTED_STATIC_VALUE);
-    }
-  }
-
-  @Nested
-  @DisplayName("Tests related with annotation usage validation")
-  class ValidationTests {
-    @Test
-    void shouldThrowExceptionWhenElementClassIsMissing() {
-      final var exception =
-          assertThrows(
-              IllegalArgumentException.class,
-              () -> testService.missConfiguredMissingElementClass());
-
-      assertThat(exception).hasMessageContaining("Define elementClass() in OfflineMode annotation");
-    }
-
-    @Test
-    void shouldThrowExceptionWhenKeyClassIsMissing() {
-      final var exception =
-          assertThrows(
-              IllegalArgumentException.class, () -> testService.missConfiguredMissingKeyClass());
-
-      assertThat(exception).hasMessageContaining("Define keyClass() in OfflineMode annotation");
     }
   }
 

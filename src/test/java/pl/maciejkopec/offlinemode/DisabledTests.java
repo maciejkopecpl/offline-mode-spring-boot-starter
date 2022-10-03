@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DisabledTests {
 
   @Autowired private TestService testService;
-
   private static final String EXPECTED_DYNAMIC_VALUE = "dynamic_data";
 
   @Test

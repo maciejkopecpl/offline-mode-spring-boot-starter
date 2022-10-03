@@ -60,20 +60,6 @@ public class TestService {
     return testFullDto;
   }
 
-  @OfflineMode(key = "'missConfigured_missing_elementClass'")
-  public Set<TestFullDto> missConfiguredMissingElementClass() {
-    final var testFullDto = new TestFullDto();
-    testFullDto.setValue(DYNAMIC_DATA);
-    return Set.of(testFullDto);
-  }
-
-  @OfflineMode(key = "'missConfigured_missing_keyClass'")
-  public Map<String, TestFullDto> missConfiguredMissingKeyClass() {
-    final var testFullDto = new TestFullDto();
-    testFullDto.setValue(DYNAMIC_DATA);
-    return Map.of("test", testFullDto);
-  }
-
   @OfflineMode(key = "'prefix_record_' + #testRecord.value")
   public TestRecord dtoCallWithRecordType(final TestRecord testRecord) {
     return new TestRecord(DYNAMIC_DATA);
@@ -91,11 +77,6 @@ public class TestService {
 
   @OfflineMode(key = "'collection_map'", elementClass = TestRecord.class, keyClass = String.class)
   public Map<String, TestRecord> dtoCallWithMapResponse() {
-    return Map.of("key", new TestRecord(DYNAMIC_DATA));
-  }
-
-  @OfflineMode(key = "'collection_map'", elementClass = TestRecord.class)
-  public Map<String, TestRecord> dtoCallWithMapMisconfigured() {
     return Map.of("key", new TestRecord(DYNAMIC_DATA));
   }
 

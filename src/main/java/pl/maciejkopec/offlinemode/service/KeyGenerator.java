@@ -10,7 +10,6 @@ import pl.maciejkopec.offlinemode.expression.ExpressionEvaluator;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -23,15 +22,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class KeyGenerator {
   private final ExpressionEvaluator evaluator = new ExpressionEvaluator();
-
-  private static final Function<Object, String> MAP_ARGUMENTS =
-      argument -> {
-        if (BeanUtils.isSimpleProperty(argument.getClass())) {
-          return argument.toString();
-        }
-
-        return String.valueOf(Objects.hashCode(argument));
-      };
 
   public String generate(final ProceedingJoinPoint joinPoint, final OfflineMode offlineMode) {
     final var METHOD = "generate(ProceedingJoinPoint, OfflineMode)";
@@ -71,7 +61,9 @@ public class KeyGenerator {
     log.debug("Entering {}", METHOD);
 
     final var arguments =
-        Arrays.stream(joinPoint.getArgs()).map(MAP_ARGUMENTS).collect(Collectors.joining("~"));
+        Arrays.stream(joinPoint.getArgs())
+            .map(this::generateArgument)
+            .collect(Collectors.joining("~"));
 
     final var key =
         String.format(
@@ -84,5 +76,13 @@ public class KeyGenerator {
 
     log.debug("Leaving {}", METHOD);
     return key;
+  }
+
+  private String generateArgument(final Object argument) {
+    if (BeanUtils.isSimpleProperty(argument.getClass())) {
+      return argument.toString();
+    }
+
+    return String.valueOf(Objects.hashCode(argument));
   }
 }
