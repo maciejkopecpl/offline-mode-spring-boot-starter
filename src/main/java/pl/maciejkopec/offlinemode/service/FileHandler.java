@@ -52,7 +52,7 @@ public class FileHandler {
     final var METHOD = "fileExists(String)";
     log.debug("Entering {}", METHOD);
 
-    final var filename = Paths.get(key + EXTENSION).normalize().toString();
+    final var filename = Paths.get(key + EXTENSION).getFileName().toString();
     final var path = Paths.get(configuration.getPath(), filename).toAbsolutePath().normalize();
 
     final var exists = path.toFile().exists();
