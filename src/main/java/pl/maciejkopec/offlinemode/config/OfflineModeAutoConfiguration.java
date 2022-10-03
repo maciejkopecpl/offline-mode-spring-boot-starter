@@ -2,6 +2,7 @@ package pl.maciejkopec.offlinemode.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,5 +31,15 @@ public class OfflineModeAutoConfiguration {
 
     log.debug("Leaving {}", METHOD);
     return offlineModeAspect;
+  }
+
+  @Bean
+  public BeanPostProcessor annotationUsageValidationBean() {
+    final var METHOD = "annotationUsageValidationBean()";
+    log.debug("Entering {}", METHOD);
+    final var annotationUsageValidation = new AnnotationUsageValidation();
+
+    log.debug("Leaving {}", METHOD);
+    return annotationUsageValidation;
   }
 }

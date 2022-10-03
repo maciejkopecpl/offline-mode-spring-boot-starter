@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
 import static pl.maciejkopec.offlinemode.LearningModeTests.TEST_FILES_PATH;
 
@@ -35,6 +36,7 @@ class LearningModeTests {
   @AfterEach
   void tearDown() {
     Arrays.stream(Objects.requireNonNull(new File(TEST_FILES_PATH).listFiles()))
+        .filter(not(p -> p.getName().equals(".gitkeep")))
         .forEach(File::delete);
   }
 
