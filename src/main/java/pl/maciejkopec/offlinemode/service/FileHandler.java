@@ -14,13 +14,14 @@ import java.nio.file.Paths;
 @Slf4j
 public class FileHandler {
 
+  private static final String EXTENSION = ".json";
   private final OfflineModeConfiguration configuration;
 
   public File read(@NonNull final String key) {
     final var METHOD = "read(String)";
     log.debug("Entering {}", METHOD);
 
-    final var filename = key + ".json";
+    final var filename = key + EXTENSION;
     final var path = Paths.get(configuration.getPath()).toAbsolutePath().normalize();
 
     final var file = path.resolve(filename).toFile();
@@ -33,7 +34,7 @@ public class FileHandler {
     final var METHOD = "write(String, String)";
     log.debug("Entering {}", METHOD);
 
-    final var filename = key + ".json";
+    final var filename = key + EXTENSION;
     final var path = Paths.get(configuration.getPath()).toAbsolutePath().normalize();
 
     try {
@@ -51,7 +52,7 @@ public class FileHandler {
     final var METHOD = "fileExists(String)";
     log.debug("Entering {}", METHOD);
 
-    final var filename = key + ".json";
+    final var filename = Paths.get(key + EXTENSION).normalize().toString();
     final var path = Paths.get(configuration.getPath(), filename).toAbsolutePath().normalize();
 
     final var exists = path.toFile().exists();
