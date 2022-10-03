@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.stereotype.Component;
 import pl.maciejkopec.offlinemode.annotation.OfflineMode;
 
 import java.lang.reflect.Method;
@@ -14,7 +13,6 @@ import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
-@Component
 public class AnnotationUsageValidation implements BeanPostProcessor {
 
   @Override
@@ -53,7 +51,8 @@ public class AnnotationUsageValidation implements BeanPostProcessor {
     }
 
     if (Void.class.equals(offlineMode.elementClass())
-        && Collection.class.isAssignableFrom(returnType)) {
+        && (Collection.class.isAssignableFrom(returnType)
+            || Map.class.isAssignableFrom(returnType))) {
       log.error(
           "OfflineMode is misconfigured. For Collection-like return types define elementClass. Details = {}",
           context);
