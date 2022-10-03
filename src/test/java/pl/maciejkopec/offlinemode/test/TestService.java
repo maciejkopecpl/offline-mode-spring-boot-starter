@@ -54,7 +54,7 @@ public class TestService {
   }
 
   @OfflineMode(key = "'missConfigured'")
-  public TestFullDto missConfigured(final TestFullDtoWithoutEquals complexObject) {
+  public TestFullDto missConfigured() {
     final var testFullDto = new TestFullDto();
     testFullDto.setValue(DYNAMIC_DATA);
     return testFullDto;
@@ -77,11 +77,6 @@ public class TestService {
 
   @OfflineMode(key = "'collection_map'", elementClass = TestRecord.class, keyClass = String.class)
   public Map<String, TestRecord> dtoCallWithMapResponse() {
-    return Map.of("key", new TestRecord(DYNAMIC_DATA));
-  }
-
-  @OfflineMode(key = "'collection_map'", elementClass = TestRecord.class)
-  public Map<String, TestRecord> dtoCallWithMapMisconfigured() {
     return Map.of("key", new TestRecord(DYNAMIC_DATA));
   }
 

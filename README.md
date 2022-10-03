@@ -69,6 +69,8 @@ offline-mode:
 The execution of `demo()` method won't happen now. Instead, the return data will be served from serialized file captured
 in the previous step.
 
+See [Wiki](https://github.com/maciejkopecpl/offline-mode-spring-boot-starter/wiki) for more examples.
+
 ## 🧐 What's the purpose?
 
 This starter is useful when you want to avoid calling external services, databases etc. There are a few possible
