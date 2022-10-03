@@ -36,14 +36,31 @@ public class ResponseCaptor {
 
     if (Mode.isLearningEnabled(configuration.getMode())) {
 
-      final var object = joinPoint.proceed();
+      if (Mode.LEARNING_SKIP_EXISTING.equals(configuration.getMode())
+          && fileHandler.fileExists(key)) {
+        final var json = fileHandler.read(key);
 
-      final var serializedObject = objectMapper.writeValueAsString(object);
+        final var clazz = offlineMode.elementClass();
 
-      fileHandler.write(key, serializedObject);
+        final var valueType = resolveReturnType(offlineMode, returnType, clazz);
+        final var value = objectMapper.readValue(json, valueType);
 
-      log.debug("Leaving {}", METHOD);
-      return object;
+        log.debug("Read existing file for key = {}", key);
+        log.debug("Leaving {}", METHOD);
+
+        return value;
+      } else {
+
+        final var object = joinPoint.proceed();
+
+        final var serializedObject = objectMapper.writeValueAsString(object);
+
+        fileHandler.write(key, serializedObject);
+
+        log.debug("Generated file for key = {}", key);
+        log.debug("Leaving {}", METHOD);
+        return object;
+      }
     } else {
 
       final var json = fileHandler.read(key);

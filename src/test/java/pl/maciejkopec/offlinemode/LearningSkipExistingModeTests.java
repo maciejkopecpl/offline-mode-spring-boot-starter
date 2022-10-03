@@ -28,7 +28,7 @@ class LearningSkipExistingModeTests {
   @Autowired private TestService testService;
 
   static final String TEST_FILES_PATH = "src/test/resources/data/learning_skip_existing";
-  private static final String EXPECTED_DYNAMIC_VALUE = "dynamic_data";
+  private static final String EXPECTED_STATIC_VALUE = "static_value";
 
   @Test
   void smokeTest() {
@@ -48,7 +48,7 @@ class LearningSkipExistingModeTests {
       final var lastModified = file.lastModified();
       final var result = testService.simpleCall();
 
-      assertThat(result).isEqualTo(EXPECTED_DYNAMIC_VALUE);
+      assertThat(result).isEqualTo(EXPECTED_STATIC_VALUE);
       assertThat(file).exists();
       assertThat(file.lastModified()).isEqualTo(lastModified);
     }

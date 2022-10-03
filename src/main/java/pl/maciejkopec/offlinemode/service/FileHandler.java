@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import pl.maciejkopec.offlinemode.config.OfflineModeConfiguration;
-import pl.maciejkopec.offlinemode.config.OfflineModeConfiguration.Mode;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,13 +14,14 @@ import java.nio.file.Paths;
 @Slf4j
 public class FileHandler {
 
+  private static final String EXTENSION = ".json";
   private final OfflineModeConfiguration configuration;
 
   public File read(@NonNull final String key) {
     final var METHOD = "read(String)";
     log.debug("Entering {}", METHOD);
 
-    final var filename = key + ".json";
+    final var filename = key + EXTENSION;
     final var path = Paths.get(configuration.getPath()).toAbsolutePath().normalize();
 
     final var file = path.resolve(filename).toFile();
@@ -34,24 +34,30 @@ public class FileHandler {
     final var METHOD = "write(String, String)";
     log.debug("Entering {}", METHOD);
 
-    final var filename = key + ".json";
+    final var filename = key + EXTENSION;
     final var path = Paths.get(configuration.getPath()).toAbsolutePath().normalize();
 
     try {
       final var dir = Files.createDirectories(path);
       final var file = dir.resolve(filename);
-      if (Mode.LEARNING_SKIP_EXISTING.equals(configuration.getMode()) && file.toFile().exists()) {
-        log.debug(
-            "Offline file already exists. Won't overwrite file = {}, because mode = {}",
-            file,
-            configuration.getMode());
-        return;
-      }
       Files.writeString(file, serializedObject);
     } catch (final IOException e) {
       log.error("Failed to write a file in {} for key {}", configuration.getPath(), key, e);
     } finally {
       log.debug("Leaving {}", METHOD);
     }
+  }
+
+  public boolean fileExists(@NonNull final String key) {
+    final var METHOD = "fileExists(String)";
+    log.debug("Entering {}", METHOD);
+
+    final var filename = Paths.get(key + EXTENSION).getFileName().toString();
+    final var path = Paths.get(configuration.getPath(), filename).toAbsolutePath().normalize();
+
+    final var exists = path.toFile().exists();
+    log.debug("Leaving {} exists = {}", METHOD, exists);
+
+    return exists;
   }
 }
