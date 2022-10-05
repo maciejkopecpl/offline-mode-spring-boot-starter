@@ -1,5 +1,6 @@
 package pl.maciejkopec.offlinemode.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -20,13 +21,14 @@ public class OfflineModeAutoConfiguration {
   private final OfflineModeConfiguration configuration;
 
   @Bean
-  public OfflineModeAspect offlineModeAspect() {
+  public OfflineModeAspect offlineModeAspect(final ObjectMapper objectMapper) {
     final var METHOD = "offlineModeAspect()";
     log.debug("Entering {}", METHOD);
 
     final var keyGenerator = new KeyGenerator();
     final var fileHandler = new FileHandler(configuration);
-    final var responseCaptor = new ResponseCaptor(keyGenerator, fileHandler, configuration);
+    final var responseCaptor =
+        new ResponseCaptor(keyGenerator, fileHandler, configuration, objectMapper);
     final var offlineModeAspect = new OfflineModeAspect(responseCaptor, configuration);
 
     log.debug("Leaving {}", METHOD);

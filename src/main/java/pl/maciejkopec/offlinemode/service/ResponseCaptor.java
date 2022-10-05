@@ -22,8 +22,7 @@ public class ResponseCaptor {
   private final KeyGenerator keyGenerator;
   private final FileHandler fileHandler;
   private final OfflineModeConfiguration configuration;
-
-  final ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper;
 
   public Object capture(final ProceedingJoinPoint joinPoint, final OfflineMode offlineMode)
       throws Throwable {

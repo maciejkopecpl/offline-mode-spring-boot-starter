@@ -84,4 +84,9 @@ public class TestService {
   public TestRecord[] dtoCallWithArrayResponse() {
     return new TestRecord[] {new TestRecord(DYNAMIC_DATA)};
   }
+
+  @OfflineMode(key = "'deserialization'", elementClass = NoConstructorDto.class)
+  public List<NoConstructorDto> noConstructorDtoCall() {
+    return List.of(NoConstructorDto.builder().value("test").build());
+  }
 }

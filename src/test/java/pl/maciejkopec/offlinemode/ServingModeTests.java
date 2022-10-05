@@ -148,4 +148,17 @@ class ServingModeTests {
       assertThat(Arrays.stream(result).findFirst().get().value()).isEqualTo(EXPECTED_STATIC_VALUE);
     }
   }
+
+  @Nested
+  @DisplayName("Deserialization related tests")
+  class DeserializationTests {
+
+    @Test
+    void shouldDeserializeWithoutConstructor() {
+      final var result = testService.noConstructorDtoCall();
+
+      assertThat(result).hasSize(1);
+      assertThat(result.get(0).getValue()).isEqualTo(EXPECTED_STATIC_VALUE);
+    }
+  }
 }
