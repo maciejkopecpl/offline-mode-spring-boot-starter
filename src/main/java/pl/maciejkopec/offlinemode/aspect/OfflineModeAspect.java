@@ -28,7 +28,7 @@ public class OfflineModeAspect {
             ? responseCaptor.capture(joinPoint, offlineMode)
             : joinPoint.proceed();
 
-    log.debug("Leaving {}", METHOD);
+    log.debug("Leaving {} enabled={}", METHOD, configuration.isEnabled());
     return value;
   }
 }

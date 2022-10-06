@@ -25,17 +25,21 @@ import static pl.maciejkopec.offlinemode.LearningModeTests.TEST_FILES_PATH;
 @ContextConfiguration(classes = TestApplication.class)
 @TestPropertySource(
     value = "classpath:application.yaml",
-    properties = {"offline-mode.mode=learning", "offline-mode.path=" + TEST_FILES_PATH})
+    properties = {"offline-mode.mode=learning", "offline-mode.path=classpath:" + TEST_FILES_PATH})
 class LearningModeTests {
 
   @Autowired private TestService testService;
 
-  static final String TEST_FILES_PATH = "src/test/resources/data/learning";
+  static final String TEST_FILES_PATH = "data/learning";
+  private static final String TEST_FILE_ABSOLUTE_PREFIX = "build/resources/test/";
+
   private static final String EXPECTED_DYNAMIC_VALUE = "dynamic_data";
 
   @AfterEach
   void tearDown() {
-    Arrays.stream(Objects.requireNonNull(new File(TEST_FILES_PATH).listFiles()))
+    Arrays.stream(
+            Objects.requireNonNull(
+                new File(TEST_FILE_ABSOLUTE_PREFIX + TEST_FILES_PATH).listFiles()))
         .filter(not(p -> p.getName().equals(".gitkeep")))
         .forEach(File::delete);
   }
@@ -52,7 +56,9 @@ class LearningModeTests {
     void shouldReturnSavedSimpleResponse() {
       final var file =
           new File(
-              TEST_FILES_PATH + "/pl.maciejkopec.offlinemode.test.TestService_simpleCall_.json");
+              TEST_FILE_ABSOLUTE_PREFIX
+                  + TEST_FILES_PATH
+                  + "/pl.maciejkopec.offlinemode.test.TestService_simpleCall_.json");
       assertThat(file).doesNotExist();
       final var lastModified = file.lastModified();
 
@@ -66,7 +72,10 @@ class LearningModeTests {
     @Test
     void shouldReturnSavedFullDtoResponse() {
       final var file =
-          new File(TEST_FILES_PATH + "/pl.maciejkopec.offlinemode.test.TestService_dtoCall_.json");
+          new File(
+              TEST_FILE_ABSOLUTE_PREFIX
+                  + TEST_FILES_PATH
+                  + "/pl.maciejkopec.offlinemode.test.TestService_dtoCall_.json");
       assertThat(file).doesNotExist();
       final var result = testService.dtoCall();
 
@@ -78,7 +87,8 @@ class LearningModeTests {
     void shouldReturnSavedFullDtoResponseWithParam() {
       final var file =
           new File(
-              TEST_FILES_PATH
+              TEST_FILE_ABSOLUTE_PREFIX
+                  + TEST_FILES_PATH
                   + "/pl.maciejkopec.offlinemode.test.TestService_dtoCall_dynamic_data.json");
       assertThat(file).doesNotExist();
 
@@ -90,7 +100,7 @@ class LearningModeTests {
 
     @Test
     void shouldReturnSavedTestFullDtoWithoutEquals() {
-      final var file = new File(TEST_FILES_PATH + "/test.json");
+      final var file = new File(TEST_FILE_ABSOLUTE_PREFIX + TEST_FILES_PATH + "/test.json");
       assertThat(file).doesNotExist();
 
       final var complexObject = new TestFullDtoWithoutEquals("value");
@@ -102,7 +112,8 @@ class LearningModeTests {
 
     @Test
     void shouldReturnSavedTestFullDto() {
-      final var file = new File(TEST_FILES_PATH + "/prefix_test_parameter.json");
+      final var file =
+          new File(TEST_FILE_ABSOLUTE_PREFIX + TEST_FILES_PATH + "/prefix_test_parameter.json");
       assertThat(file).doesNotExist();
       final var complexObject = new TestFullDtoWithoutEquals("test_parameter");
       final var result = testService.dtoCallWithCustomComplexKey(complexObject);
@@ -113,7 +124,9 @@ class LearningModeTests {
 
     @Test
     void shouldReturnSavedRecord() {
-      final var file = new File(TEST_FILES_PATH + "/prefix_record_test_parameter.json");
+      final var file =
+          new File(
+              TEST_FILE_ABSOLUTE_PREFIX + TEST_FILES_PATH + "/prefix_record_test_parameter.json");
       assertThat(file).doesNotExist();
       final var testRecord = new TestRecord("test_parameter");
       final var result = testService.dtoCallWithRecordType(testRecord);
@@ -128,7 +141,8 @@ class LearningModeTests {
   class CollectionTests {
     @Test
     void shouldGenerateCollectionListJson() {
-      final var file = new File(TEST_FILES_PATH + "/collection_list.json");
+      final var file =
+          new File(TEST_FILE_ABSOLUTE_PREFIX + TEST_FILES_PATH + "/collection_list.json");
       assertThat(file).doesNotExist();
       final var result = testService.dtoCallWithListResponse();
 
@@ -138,7 +152,8 @@ class LearningModeTests {
 
     @Test
     void shouldGenerateCollectionSetJson() {
-      final var file = new File(TEST_FILES_PATH + "/collection_set.json");
+      final var file =
+          new File(TEST_FILE_ABSOLUTE_PREFIX + TEST_FILES_PATH + "/collection_set.json");
       assertThat(file).doesNotExist();
       final var result = testService.dtoCallWithSetResponse();
 
@@ -148,7 +163,8 @@ class LearningModeTests {
 
     @Test
     void shouldGenerateCollectionMapJson() {
-      final var file = new File(TEST_FILES_PATH + "/collection_map.json");
+      final var file =
+          new File(TEST_FILE_ABSOLUTE_PREFIX + TEST_FILES_PATH + "/collection_map.json");
       assertThat(file).doesNotExist();
       final var result = testService.dtoCallWithMapResponse();
 
@@ -158,7 +174,8 @@ class LearningModeTests {
 
     @Test
     void shouldGenerateCollectionArrayJson() {
-      final var file = new File(TEST_FILES_PATH + "/collection_array.json");
+      final var file =
+          new File(TEST_FILE_ABSOLUTE_PREFIX + TEST_FILES_PATH + "/collection_array.json");
       assertThat(file).doesNotExist();
       final var result = testService.dtoCallWithArrayResponse();
 

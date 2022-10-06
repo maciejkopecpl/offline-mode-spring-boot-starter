@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(classes = TestApplication.class)
 @TestPropertySource(
     value = "classpath:application.yaml",
-    properties = {"offline-mode.mode=serving", "offline-mode.path=src/test/resources/data/serving"})
+    properties = {"offline-mode.mode=serving", "offline-mode.path=data/serving"})
 class ServingModeTests {
 
   @Autowired private TestService testService;

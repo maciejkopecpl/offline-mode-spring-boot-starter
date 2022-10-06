@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     properties = {
       "offline-mode.enabled=false",
       "offline-mode.mode=serving",
-      "offline-mode.path=src/test/resources/data/serving"
+      "offline-mode.path=data/serving"
     })
 class DisabledTests {
 

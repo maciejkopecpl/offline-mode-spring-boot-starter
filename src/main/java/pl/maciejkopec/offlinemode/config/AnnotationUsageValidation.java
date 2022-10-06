@@ -59,7 +59,7 @@ public class AnnotationUsageValidation implements BeanPostProcessor {
       throw new IllegalArgumentException("Define elementClass() in OfflineMode annotation");
     }
 
-    log.debug("Leaving {}", METHOD);
+    log.debug("Leaving {} returnType={} offlineMode={}", METHOD, returnType, offlineMode);
   }
 
   private record ValidationContext(Method method, OfflineMode offlineMode) {}

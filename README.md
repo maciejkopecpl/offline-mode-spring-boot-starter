@@ -21,14 +21,14 @@ Maven
 <dependency>
     <groupId>pl.maciejkopec</groupId>
     <artifactId>offline-mode-spring-boot-starter</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
 </dependency>
 ```
 
 Gradle
 
 ```groovy
-implementation 'pl.maciejkopec:offline-mode-spring-boot-starter:1.0.8'
+implementation 'pl.maciejkopec:offline-mode-spring-boot-starter:1.0.9'
 ```
 
 2. Enable Offline Mode in `LEARNING` mode
@@ -69,7 +69,7 @@ offline-mode:
 The execution of `demo()` method won't happen now. Instead, the return data will be served from serialized file captured
 in the previous step.
 
-See [Wiki](https://github.com/maciejkopecpl/offline-mode-spring-boot-starter/wiki) for more examples.
+See [documentation](https://github.com/maciejkopecpl/offline-mode-spring-boot-starter/wiki) for more examples.
 
 ## 🧐 What's the purpose?
 

@@ -33,16 +33,15 @@ public class ResponseCaptor {
     final var signature = joinPoint.getSignature();
     final var returnType = ((MethodSignature) signature).getReturnType();
 
-    if (Mode.isLearningEnabled(configuration.getMode())) {
+    final var jsonFile = fileHandler.read(key);
 
-      if (Mode.LEARNING_SKIP_EXISTING.equals(configuration.getMode())
-          && fileHandler.fileExists(key)) {
-        final var json = fileHandler.read(key);
+    if (Mode.isLearningEnabled(configuration.getMode())) {
+      if (Mode.LEARNING_SKIP_EXISTING.equals(configuration.getMode()) && jsonFile.isPresent()) {
 
         final var clazz = offlineMode.elementClass();
 
         final var valueType = resolveReturnType(offlineMode, returnType, clazz);
-        final var value = objectMapper.readValue(json, valueType);
+        final var value = objectMapper.readValue(jsonFile.get(), valueType);
 
         log.debug("Read existing file for key = {}", key);
         log.debug("Leaving {}", METHOD);
@@ -62,13 +61,11 @@ public class ResponseCaptor {
       }
     } else {
 
-      final var json = fileHandler.read(key);
-
-      if (json.exists()) {
+      if (jsonFile.isPresent()) {
         final var clazz = offlineMode.elementClass();
 
         final var valueType = resolveReturnType(offlineMode, returnType, clazz);
-        final var value = objectMapper.readValue(json, valueType);
+        final var value = objectMapper.readValue(jsonFile.get(), valueType);
 
         log.debug("Leaving {}", METHOD);
         return value;
@@ -91,7 +88,7 @@ public class ResponseCaptor {
     final var METHOD = "resolveReturnType(OfflineMode, Class, Class<?>)";
     log.debug("Entering {}", METHOD);
 
-    JavaType type;
+    final JavaType type;
     if (Map.class.isAssignableFrom(returnType)) {
       type =
           objectMapper
