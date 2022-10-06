@@ -32,7 +32,7 @@ public class KeyGenerator {
             ? argumentBasedKey(joinPoint)
             : spelBasedKey(joinPoint, offlineMode);
 
-    log.debug("Leaving {}", METHOD);
+    log.debug("Leaving {} key={}", METHOD, key);
     return key;
   }
 

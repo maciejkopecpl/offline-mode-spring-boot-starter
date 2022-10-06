@@ -27,7 +27,9 @@ class LearningSkipExistingModeTests {
 
   @Autowired private TestService testService;
 
-  static final String TEST_FILES_PATH = "src/test/resources/data/learning_skip_existing";
+  static final String TEST_FILES_PATH = "data/learning_skip_existing";
+  private static final String TEST_FILE_ABSOLUTE_PREFIX = "build/resources/test/";
+
   private static final String EXPECTED_STATIC_VALUE = "static_value";
 
   @Test
@@ -43,7 +45,9 @@ class LearningSkipExistingModeTests {
     void shouldNotOverwriteExistingFile() {
       final var file =
           new File(
-              TEST_FILES_PATH + "/pl.maciejkopec.offlinemode.test.TestService_simpleCall_.json");
+              TEST_FILE_ABSOLUTE_PREFIX
+                  + TEST_FILES_PATH
+                  + "/pl.maciejkopec.offlinemode.test.TestService_simpleCall_.json");
       assertThat(file).exists();
       final var lastModified = file.lastModified();
       final var result = testService.simpleCall();
@@ -55,7 +59,8 @@ class LearningSkipExistingModeTests {
 
     @Test
     void shouldGenerateCollectionSetJson() {
-      final var file = new File(TEST_FILES_PATH + "/collection_set.json");
+      final var file =
+          new File(TEST_FILE_ABSOLUTE_PREFIX + TEST_FILES_PATH + "/collection_set.json");
       assertThat(file).doesNotExist();
       final var result = testService.dtoCallWithSetResponse();
 

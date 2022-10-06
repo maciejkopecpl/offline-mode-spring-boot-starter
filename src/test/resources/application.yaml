@@ -1,7 +1,7 @@
 offline-mode:
   mode: learning
   enabled: true
-  path: "src/test/resources/data"
+  path: "classpath:data"
 logging:
   level:
     pl.maciejkopec.offlinemode: DEBUG
