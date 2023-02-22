@@ -21,14 +21,14 @@ Maven
 <dependency>
     <groupId>pl.maciejkopec</groupId>
     <artifactId>offline-mode-spring-boot-starter</artifactId>
-    <version>1.0.13</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
 Gradle
 
 ```groovy
-implementation 'pl.maciejkopec:offline-mode-spring-boot-starter:1.0.13'
+implementation 'pl.maciejkopec:offline-mode-spring-boot-starter:2.0.0'
 ```
 
 2. Enable Offline Mode in `LEARNING` mode
@@ -70,6 +70,15 @@ The execution of `demo()` method won't happen now. Instead, the return data will
 in the previous step.
 
 See [documentation](https://github.com/maciejkopecpl/offline-mode-spring-boot-starter/wiki) for more examples.
+
+## ✔️ Requirements
+#### 2.X version
+- Spring Boot 3
+- Java 17
+
+#### 1.X version
+- Spring Boot 2
+- Java 16
 
 ## 🧐 What's the purpose?
 
