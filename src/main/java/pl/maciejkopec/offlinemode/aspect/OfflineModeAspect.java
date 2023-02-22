@@ -6,7 +6,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import pl.maciejkopec.offlinemode.annotation.OfflineMode;
-import pl.maciejkopec.offlinemode.config.OfflineModeConfiguration;
 import pl.maciejkopec.offlinemode.service.ResponseCaptor;
 
 @Aspect
@@ -15,7 +14,6 @@ import pl.maciejkopec.offlinemode.service.ResponseCaptor;
 public class OfflineModeAspect {
 
   private final ResponseCaptor responseCaptor;
-  private final OfflineModeConfiguration configuration;
 
   @Around("@annotation(offlineMode)")
   public Object captureOfflineCall(
@@ -23,12 +21,9 @@ public class OfflineModeAspect {
     final var METHOD = "captureOfflineCall(ProceedingJoinPoint, OfflineMode)";
     log.debug("Entering {}", METHOD);
 
-    final var value =
-        configuration.isEnabled()
-            ? responseCaptor.capture(joinPoint, offlineMode)
-            : joinPoint.proceed();
+    final var value = responseCaptor.capture(joinPoint, offlineMode);
 
-    log.debug("Leaving {} enabled={}", METHOD, configuration.isEnabled());
+    log.debug("Leaving {}", METHOD);
     return value;
   }
 }
