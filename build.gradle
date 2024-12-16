@@ -13,7 +13,7 @@ plugins {
 }
 
 group = 'pl.maciejkopec'
-version = '2.0.10'
+version = '2.0.11'
 sourceCompatibility = '17'
 
 repositories {
