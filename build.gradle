@@ -56,7 +56,7 @@ jacocoTestReport {
     }
 }
 
-sonarqube {
+sonar {
     properties {
         property "sonar.projectKey", "maciejkopecpl_offline-mode-spring-boot-starter"
         property "sonar.organization", "maciejkopecpl"
