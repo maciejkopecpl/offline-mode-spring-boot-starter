@@ -13,7 +13,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
-          java-version: 21
+          distribution: 'temurin'
+          java-version: '21'
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
