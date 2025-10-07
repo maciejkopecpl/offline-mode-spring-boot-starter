@@ -65,7 +65,7 @@ jobs:
           ossrhPassword: ${{ secrets.OSSRHPASSWORD }}
         run: ./gradlew build --info
       - name: Test Report
-        uses: dorny/test-reporter@v4
+        uses: dorny/test-reporter@v2
         if: success() || failure()    # run this step even if previous step failed
         with:
           name: JUnit Tests            # Name of the check run which will be created
