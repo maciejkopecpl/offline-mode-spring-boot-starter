@@ -55,7 +55,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           ossrhUsername: ${{ secrets.OSSRHUSERNAME }} 
           ossrhPassword: ${{ secrets.OSSRHPASSWORD }}
-        run: ./gradlew build sonarqube --info        
+        run: ./gradlew build sonar --info
       - name: Build
         # see https://github.com/dependabot/dependabot-core/issues/3253#issuecomment-852541544
         if: ${{ github.actor == 'dependabot[bot]' }}
