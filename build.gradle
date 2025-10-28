@@ -36,6 +36,8 @@ dependencies {
     api 'org.springframework.boot:spring-boot-starter-json'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // added for Spring Boot 3.5 upgrade
+    testImplementation 'org.junit.platform:junit-platform-launcher'
 
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
