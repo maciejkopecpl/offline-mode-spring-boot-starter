@@ -1,6 +1,5 @@
 package pl.maciejkopec.offlinemode.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -9,6 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ResourceLoader;
+import tools.jackson.databind.ObjectMapper;
 import pl.maciejkopec.offlinemode.aspect.OfflineModeAspect;
 import pl.maciejkopec.offlinemode.service.FileHandler;
 import pl.maciejkopec.offlinemode.service.KeyGenerator;

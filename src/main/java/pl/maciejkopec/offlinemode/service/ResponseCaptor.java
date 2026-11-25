@@ -1,11 +1,11 @@
 package pl.maciejkopec.offlinemode.service;
 
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.ObjectMapper;
 import pl.maciejkopec.offlinemode.annotation.OfflineMode;
 import pl.maciejkopec.offlinemode.config.OfflineModeConfiguration;
 

@@ -73,7 +73,7 @@ See [documentation](https://github.com/maciejkopecpl/offline-mode-spring-boot-st
 
 ## ✔️ Requirements
 #### 2.X version
-- Spring Boot 3
+- Spring Boot 4
 - Java 21
 
 #### 1.X version
