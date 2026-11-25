@@ -38,35 +38,33 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Check Sonar Token
+        id: sonar_token
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           if [[ -z "${SONAR_TOKEN}" ]]
           then
             echo 'Sonar Token not set.'
+            echo 'available=false' >> "$GITHUB_OUTPUT"
           else
             echo 'Sonar Token set.'
+            echo 'available=true' >> "$GITHUB_OUTPUT"
           fi
-      - name: Build and analyze
+      - name: Compile
+        run: ./gradlew compileJava
+      - name: Test
+        run: ./gradlew test
+      - name: Assemble artifacts
+        run: ./gradlew assemble
+      - name: SonarCloud analysis
         # see https://github.com/dependabot/dependabot-core/issues/3253#issuecomment-852541544
-        if: ${{ github.actor != 'dependabot[bot]' }}
+        if: ${{ github.actor != 'dependabot[bot]' && steps.sonar_token.outputs.available == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          ossrhUsername: ${{ secrets.OSSRHUSERNAME }} 
-          ossrhPassword: ${{ secrets.OSSRHPASSWORD }}
-        run: ./gradlew build sonar --info
-      - name: Build
-        # see https://github.com/dependabot/dependabot-core/issues/3253#issuecomment-852541544
-        if: ${{ github.actor == 'dependabot[bot]' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          ossrhUsername: ${{ secrets.OSSRHUSERNAME }} 
-          ossrhPassword: ${{ secrets.OSSRHPASSWORD }}
-        run: ./gradlew build --info
+        run: ./gradlew sonar --info
       - name: Test Report
-        uses: dorny/test-reporter@v2
+        uses: dorny/test-reporter@dc3a92680fcc15842eef52e8c4606ea7ce6bd3f3 # v2.1.1
         if: success() || failure()    # run this step even if previous step failed
         with:
           name: JUnit Tests            # Name of the check run which will be created
