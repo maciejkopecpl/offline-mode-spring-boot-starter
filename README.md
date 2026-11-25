@@ -21,14 +21,14 @@ Maven
 <dependency>
     <groupId>pl.maciejkopec</groupId>
     <artifactId>offline-mode-spring-boot-starter</artifactId>
-    <version>2.0.12</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
 Gradle
 
 ```groovy
-implementation 'pl.maciejkopec:offline-mode-spring-boot-starter:2.0.12'
+implementation 'pl.maciejkopec:offline-mode-spring-boot-starter:3.0.0'
 ```
 
 2. Enable Offline Mode in `LEARNING` mode
@@ -55,8 +55,8 @@ class DemoService {
 }
 ```
 
-4. Run your application. This library will capture the returned data and store serialized data in `offline` folder.
-5. Turn Offline Mode in `SERVING` mode
+4. Run your application. This library will capture the returned data and store it in the configured directory (the default is `offline`).
+5. Switch Offline Mode to `SERVING` mode.
 
 application.yaml
 
@@ -66,14 +66,18 @@ offline-mode:
   enabled: true
 ```
 
-The execution of `demo()` method won't happen now. Instead, the return data will be served from serialized file captured
-in the previous step.
+When a matching response file exists, the `demo()` method won't be executed. Instead, its recorded return data will be
+served from the file captured in the previous step. If no matching file exists, the method will execute normally.
 
 See [documentation](https://github.com/maciejkopecpl/offline-mode-spring-boot-starter/wiki) for more examples.
 
 ## ✔️ Requirements
-#### 2.X version
+#### 3.X version
 - Spring Boot 4
+- Java 21
+
+#### 2.X version
+- Spring Boot 3
 - Java 21
 
 #### 1.X version
